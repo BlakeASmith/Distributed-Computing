@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>RPC Exercise &#8212; Distributied Computing Summer 2020 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Leslie Lamport Quote" href="../google_article.html" />
+    <link rel="prev" title="Welcome to Distributied Computing Summer 2020’s documentation!" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="rpc-exercise">
+<h1>RPC Exercise<a class="headerlink" href="#rpc-exercise" title="Permalink to this headline">¶</a></h1>
+<p>see the slides</p>
+<p><code class="file docutils literal notranslate"><span class="pre">../../slides/RPC</span> <span class="pre">and</span> <span class="pre">clock</span> <span class="pre">exercise.pdf</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">NTP_SERVER</span> <span class="o">=</span> <span class="s2">&quot;0.uk.pool.ntp.org&quot;</span>
+<span class="n">TIME1970</span> <span class="o">=</span> <span class="mi">2208988800</span>
+
+<span class="c1">#TODO: Contact the time server every 10 seconds</span>
+<span class="c1">#TODO: Calculate RTT and clock offset</span>
+<span class="c1">#TODO: Smoothing of clock offset</span>
+<span class="c1">#TODO: Run for 12 hrs producing a log</span>
+<span class="c1">#TODO: Parse log to calculate 1. Average RTT, 2. percent of failed transmission, 3. average drift rate</span>
+
+<span class="k">def</span> <span class="nf">sntp_client</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span> <span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> 
+                        <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_DGRAM</span> <span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\x1b</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="mi">47</span> <span class="o">*</span> <span class="s1">&#39;</span><span class="se">\0</span><span class="s1">&#39;</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">sendto</span><span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
+                     <span class="p">(</span> <span class="n">NTP_SERVER</span><span class="p">,</span> <span class="mi">123</span> <span class="p">))</span>
+    <span class="n">data</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">recvfrom</span><span class="p">(</span> <span class="mi">1024</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Response received </span>
+                          <span class="n">from</span><span class="p">:</span><span class="s1">&#39;, address)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s1">&#39;!12I&#39;</span><span class="p">,</span> <span class="n">data</span> <span class="p">)[</span><span class="mi">10</span><span class="p">]</span>
+    <span class="n">t</span> <span class="o">-=</span> <span class="n">TIME1970</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">Time=</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">time</span><span class="o">.</span><span class="n">ctime</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">sntp_client</span><span class="p">()</span>
+  
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Distributied Computing Summer 2020</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">RPC Exercise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../google_article.html">Leslie Lamport Quote</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../google_article.html#google-tutorial">Google Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../google_article.html#design-principles">Design Principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../google_exercises.html">Exercises:</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Welcome to Distributied Computing Summer 2020’s documentation!</a></li>
+      <li>Next: <a href="../google_article.html" title="next chapter">Leslie Lamport Quote</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Blake Smith.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/RPC_exercise/rpc_exercise.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
