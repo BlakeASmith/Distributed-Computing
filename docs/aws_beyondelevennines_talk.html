@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Noes from AWS Beyond Eleven Nines Talk &#8212; Distributied Computing Summer 2020 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Clock Exercise" href="clock_exercise/clock_exercise.html" />
+    <link rel="prev" title="Welcome to Distributied Computing Summer 2020’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="noes-from-aws-beyond-eleven-nines-talk">
+<h1>Noes from AWS Beyond Eleven Nines Talk<a class="headerlink" href="#noes-from-aws-beyond-eleven-nines-talk" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">see full talk here</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://www.youtube.com/watch?time_continue=582&amp;v=DzRyrvUF-C0&amp;feature=emb_logo">https://www.youtube.com/watch?time_continue=582&amp;v=DzRyrvUF-C0&amp;feature=emb_logo</a></p>
+</dd>
+</dl>
+<ul class="simple">
+<li><p>trillions of objects, needed to scale over the years</p></li>
+</ul>
+<div class="section" id="lessons-from-security">
+<h2>Lessons from security<a class="headerlink" href="#lessons-from-security" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">Threat Model</dt>
+<dd class="field-odd"><p>Get really specific about what a threat is</p>
+</dd>
+<dt class="field-even">Q</dt>
+<dd class="field-even"><p>Who is the attacker?, what can they do?, what are they trying to do to us?</p>
+</dd>
+<dt class="field-odd">A</dt>
+<dd class="field-odd"><ol class="arabic simple">
+<li><p>Pick a specific risk (eg. account hacking)</p></li>
+<li><p>What could they do (eg. password guessing)</p></li>
+<li><p>What are they tring to do (eg. steal accounts to send spam)</p></li>
+</ol>
+</dd>
+<dt class="field-even">next</dt>
+<dd class="field-even"><p>move to pros, answer the questions in detail</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Implement Mechanisms</dt><dd><ul class="simple">
+<li><p>Ongoing</p></li>
+<li><p>Technical and organizational approaches</p></li>
+</ul>
+</dd>
+</dl>
+<p>Attacker could be failiure, decay, does not need to be someone</p>
+</div>
+<div class="section" id="common-threats">
+<h2>Common Threats<a class="headerlink" href="#common-threats" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">problem</dt>
+<dd class="field-odd"><p>Facility Failiure
+* any single facility can fail at any time</p>
+</dd>
+<dt class="field-even">solution</dt>
+<dd class="field-even"><p>availability zones, hazard analysis
+-&gt; Buildings that won’t fail together</p>
+</dd>
+<dt class="field-odd">quote</dt>
+<dd class="field-odd"><p>writing is natures way of showing you how sloppy your thinking is</p>
+</dd>
+<dt class="field-even">problem</dt>
+<dd class="field-even"><p>Hardware Failiure</p>
+</dd>
+</dl>
+<p>worry about the worst exposed componants, not the averages</p>
+<dl class="field-list simple">
+<dt class="field-odd">quote</dt>
+<dd class="field-odd"><p>you are only as good as you are able to measure yourself</p>
+</dd>
+<dt class="field-even">problem</dt>
+<dd class="field-even"><p>Data corruption</p>
+</dd>
+</dl>
+<p>myths:
+* TCP checksums got be covered
+* CPU won’t lie to me
+* Data coruption is a hardware problem
+* Corruption is always a single bit flip</p>
+<dl class="field-list simple">
+<dt class="field-odd">problem</dt>
+<dd class="field-odd"><p>Bugs</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><p>code level bugs</p></li>
+<li><p>design level bugs</p></li>
+</ul>
+<p>zonal delpoys
+`</p>
+</div>
+<div class="section" id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="byo-threat-models">
+<h2>BYO Threat Models<a class="headerlink" href="#byo-threat-models" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Distributied Computing Summer 2020</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Noes from AWS Beyond Eleven Nines Talk</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lessons-from-security">Lessons from security</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#common-threats">Common Threats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#byo-threat-models">BYO Threat Models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="clock_exercise/clock_exercise.html">Clock Exercise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="google_article.html">Leslie Lamport Quote</a></li>
+<li class="toctree-l1"><a class="reference internal" href="google_article.html#google-tutorial">Google Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="google_article.html#design-principles">Design Principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="google_exercises.html">Exercises:</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Distributied Computing Summer 2020’s documentation!</a></li>
+      <li>Next: <a href="clock_exercise/clock_exercise.html" title="next chapter">Clock Exercise</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Blake Smith.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/aws_beyondelevennines_talk.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

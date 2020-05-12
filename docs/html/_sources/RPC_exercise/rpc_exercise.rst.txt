@@ -1,8 +1,0 @@
-RPC Exercise
-================
-
-see the slides
-
-:file:`../../slides/RPC and clock exercise.pdf`
-
-.. literalinclude:: timeclient.py

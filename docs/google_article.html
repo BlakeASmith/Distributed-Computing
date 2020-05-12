@@ -1,0 +1,319 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Leslie Lamport Quote &#8212; Distributied Computing Summer 2020 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Exercises:" href="google_exercises.html" />
+    <link rel="prev" title="Clock Exercise" href="clock_exercise/clock_exercise.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="leslie-lamport-quote">
+<h1>Leslie Lamport Quote<a class="headerlink" href="#leslie-lamport-quote" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">A distributed system is</dt>
+<dd class="field-odd"><p>one in which the failure of a computer that
+you didn’t even know existed causes your computer to be unuseable</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><dl class="simple">
+<dt>No single point of failiure</dt><dd><ul>
+<li><p>-&gt; many points of failure -&gt; partial failiure</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>more scalable, you can throw more hardware nodes at the problem</p></li>
+<li><p>shared computation between nodes can lead us to lots of problems</p></li>
+</ul>
+</div>
+<div class="section" id="google-tutorial">
+<h1>Google Tutorial<a class="headerlink" href="#google-tutorial" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">A distributed system is</dt>
+<dd class="field-odd"><p>an application that executes a collection
+of protocols to co-ordinate the actions
+of multuple processes on a network, such that
+all components coperate together to perform a
+single or small set of related tasks.</p>
+</dd>
+</dl>
+<p>Fault tolerance is really important:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:Fault Tolerant: the system can recover from failiures without
+                 fucking up something else
+
+:Highly Available: continues to provide services even when some
+        components have failed
+
+:Recoverable: components can be added back into the system after
+        they have been repaired, or the failiure has been otherwise
+        resolved
+
+:Consistent: the system acts like a non-distributed system by co-ordinating
+        the actions of it&#39;s components while managing failures and concurrency
+
+:Scalable: continues to operate effectivley when the system is scaled in
+        some aspect such as the number of nodes in the network or the overall
+        load on the system. These things add complexity and increase the frequency
+        of failures. This should not have a significant efffect on the system
+        as a whole
+
+:predictable performance: does the system behave predictably when
+          more nodes are added? when more data is added?
+</pre></div>
+</div>
+<p>Security is also really important</p>
+<p>Distributed systems must be designed with the <strong>expectation</strong> of failiure</p>
+<ul class="simple">
+<li><p>If there is a 1/10,000 chance of a failiure, that means it happends <strong>all the time</strong></p></li>
+<li><p>Distributed systems must be designed with the though that failiure happens
+all the time, because it kind of does</p></li>
+<li><p>–&gt; <strong>multiplier on the value of simplicity</strong></p></li>
+</ul>
+<div class="section" id="bugs">
+<h2>Bugs<a class="headerlink" href="#bugs" title="Permalink to this headline">¶</a></h2>
+<p>Two major categories of bugs in distributed systems:</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">Heisenbug</dt>
+<dd class="field-odd"><p>A bug that seems to change or disappear entirley
+when it is observed/researched (Heisenburg Uncertainty Principle)</p>
+</dd>
+<dt class="field-even">Bohrbug</dt>
+<dd class="field-even"><p>opposite of a Heisenbug. It manifests itself under a well defined
+set of conditions (consistently)</p>
+</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="failiures-and-fallacies">
+<h2>Failiures and Fallacies<a class="headerlink" href="#failiures-and-fallacies" title="Permalink to this headline">¶</a></h2>
+<p>many types of failiure:</p>
+<blockquote>
+<div><dl class="field-list">
+<dt class="field-odd">haulting failure</dt>
+<dd class="field-odd"><p>the thing just stops:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">can</span><span class="s1">&#39;t tell if it&#39;</span><span class="n">s</span> <span class="n">slow</span> <span class="ow">or</span> <span class="n">dead</span>
+<span class="o">*</span> <span class="n">timeout</span> <span class="n">goes</span> <span class="n">off</span><span class="p">,</span> <span class="n">but</span> <span class="n">that</span> <span class="n">doesnt</span> <span class="n">mean</span> <span class="n">it</span><span class="s1">&#39;s shut down</span>
+</pre></div>
+</div>
+</dd>
+<dt class="field-even">Fail stop</dt>
+<dd class="field-even"><p>like a haulting failure but with some notification
+to other components</p>
+</dd>
+<dt class="field-odd">Omission Failiures</dt>
+<dd class="field-odd"><p>a message didn’t make it (primarily due to buffer overflow
+at some node in the network)</p>
+</dd>
+<dt class="field-even">Network Failure</dt>
+<dd class="field-even"><p>the network goes</p>
+</dd>
+<dt class="field-odd">Network Partition</dt>
+<dd class="field-odd"><p>there is a split between two or more disjoint
+clusters in the network. the network is operational within these
+sub-networks, but they cannot communicate accross their bounds</p>
+</dd>
+<dt class="field-even">Timing</dt>
+<dd class="field-even"><p>some temporal property of the system is violated
+no centralized clock –&gt; dificulty with timing</p>
+</dd>
+<dt class="field-odd">Bysantine</dt>
+<dd class="field-odd"><p>data corruption, malicious programs, a whole list here</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Some wrong assumptions can lead to bysantine behaviour:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">Reliable</span> <span class="n">network</span>
+<span class="o">*</span> <span class="n">zero</span> <span class="n">latency</span>
+<span class="o">*</span> <span class="n">infinite</span> <span class="n">bandwidth</span>
+<span class="o">*</span> <span class="n">secure</span> <span class="n">network</span>
+<span class="o">*</span> <span class="n">topologies</span> <span class="n">don</span><span class="s1">&#39;t change</span>
+        <span class="o">*</span> <span class="n">truth</span> <span class="ow">is</span> <span class="n">that</span> <span class="n">nodes</span> <span class="n">come</span> <span class="ow">and</span> <span class="n">go</span>
+<span class="o">*</span> <span class="mi">1</span> <span class="n">administrator</span>
+<span class="o">*</span> <span class="n">Transport</span> <span class="n">cost</span> <span class="p">(</span><span class="n">copying</span><span class="p">,</span> <span class="n">buffering</span><span class="p">)</span>
+<span class="o">*</span> <span class="n">Homogenous</span> <span class="n">network</span> <span class="p">(</span><span class="n">nodes</span><span class="o">/</span><span class="n">links</span> <span class="n">are</span> <span class="n">the</span> <span class="n">same</span> <span class="n">accross</span> <span class="n">the</span> <span class="n">system</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="how">
+<h2>How?<a class="headerlink" href="#how" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">client-server</dt>
+<dd class="field-odd"><p>more realistically, service-client where the service is
+made up of multiple running nodes</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><dl class="simple">
+<dt>binding</dt><dd><ul>
+<li><p>A process that wants to use a service gets associated to
+a specific server providing the service, think <code class="xref py py-func docutils literal notranslate"><span class="pre">socket.bind(addr,</span> <span class="pre">port)()</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>replication</dt><dd><ul>
+<li><p>multiple copies of data across the system to increase availability
+(if some node goes down) and allow local access in multiple locations</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>caching</dt><dd><ul>
+<li><p>store a local copy of the data for quick access if it is requested again</p></li>
+<li><p>cach data can go stale and needs to be updated periodically. If the cached
+data is refreshed by/ syncronized to the service data then this is actually
+replication</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>TCP, UDP, <strong>RPC</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd"><strong>RPC</strong></dt>
+<dd class="field-odd"><p>Remote Procedure Call, It’s like a distributed function call</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="remote-procedure-calls">
+<h2>Remote Procedure Calls<a class="headerlink" href="#remote-procedure-calls" title="Permalink to this headline">¶</a></h2>
+<p>emulates a local procedure call over a network. Arguments are sent to the
+server through a packet (or multiple). The server executes the requested service
+and sends a response packet back to the client. The client process can then
+continue</p>
+</div>
+</div>
+<div class="section" id="design-principles">
+<h1>Design Principles<a class="headerlink" href="#design-principles" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>idenentify failure senarios explicitly and ensure that the code is covered for
+the most likley ones</p></li>
+<li><p>prepare of unresponsive senders/receivers in both the client and server code</p></li>
+<li><p>minimize network traffic, every request/response increases the probability of failure</p></li>
+<li><p>don’t assume that data arriving from one process to another is the same data that was
+sent. Use validity checks like checksums to ensure the data has not changed</p></li>
+<li><p>avoid acks, they’re expensive</p></li>
+<li><p>retransmission is costly. Adjust the delay for optimal transmission</p></li>
+</ul>
+<p>When a process  A stores information that cannot be reconstructed it can pose a problem to
+the distributed system. Other processes must go A for that data, A becomes a single point
+of failiure. So A’s data must be replicated somewhere else as a backup, but then we have
+problems with managing the changes of that data between the replicated sources. This
+presents a trade-off between accessability of the data (the ability to procure it at all)
+and acccuracy of the data.</p>
+<p>TODO: review forum posts with answers <a class="reference external" href="https://coursespaces.uvic.ca/mod/hsuforum/discuss.php?d=87144#p145524">https://coursespaces.uvic.ca/mod/hsuforum/discuss.php?d=87144#p145524</a>
+TODO: Answer some more question from the article
+<a class="reference external" href="http://www.hpcs.cs.tsukuba.ac.jp/~tatebe/lecture/h23/dsys/dsd-tutorial.html">http://www.hpcs.cs.tsukuba.ac.jp/~tatebe/lecture/h23/dsys/dsd-tutorial.html</a></p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Distributied Computing Summer 2020</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="aws_beyondelevennines_talk.html">Noes from AWS Beyond Eleven Nines Talk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clock_exercise/clock_exercise.html">Clock Exercise</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Leslie Lamport Quote</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#google-tutorial">Google Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#bugs">Bugs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#failiures-and-fallacies">Failiures and Fallacies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how">How?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#remote-procedure-calls">Remote Procedure Calls</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#design-principles">Design Principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="google_exercises.html">Exercises:</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="clock_exercise/clock_exercise.html" title="previous chapter">Clock Exercise</a></li>
+      <li>Next: <a href="google_exercises.html" title="next chapter">Exercises:</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Blake Smith.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/google_article.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
