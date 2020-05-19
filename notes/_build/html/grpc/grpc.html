@@ -1,0 +1,266 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Diggind in to the gRPC example code &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Semantics of RPC" href="../week2.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Distributied Computing Summer 2020
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../google_article.html">Google Article on Distributed Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../aws_beyondelevennines_talk.html">Noes from AWS Beyond Eleven Nines Talk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clock_exercise/clock_exercise.html">Clock Exercise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../week2.html">Semantics of RPC</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Diggind in to the gRPC example code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installing-grpc">Installing gRPC</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#go-import-system-sidebar">Go Import System Sidebar</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Distributied Computing Summer 2020</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Diggind in to the gRPC example code</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/grpc/grpc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="diggind-in-to-the-grpc-example-code">
+<h1>Diggind in to the gRPC example code<a class="headerlink" href="#diggind-in-to-the-grpc-example-code" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installing-grpc">
+<h2>Installing gRPC<a class="headerlink" href="#installing-grpc" title="Permalink to this headline">¶</a></h2>
+<p>see the <a class="reference external" href="https://grpc.io/docs/quickstart/go/">quickstart</a> for more detail</p>
+<p>First you need to install the gRPC module for go</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Install Go Module for gRPC</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">export</span> <span class="nv">GO111MODULE</span><span class="o">=</span>on <span class="c1"># this forces go to use Go modules instead of GOPATH</span>
+$ go get google.golang.org/grpc@v1.28.1
+</pre></div>
+</div>
+</div>
+<p>The <strong>GO111MODULE</strong> situation is a bit of mess, this article explains it well
+<a class="reference external" href="https://dev.to/maelvls/why-is-go111module-everywhere-and-everything-about-go-modules-24k">https://dev.to/maelvls/why-is-go111module-everywhere-and-everything-about-go-modules-24k</a></p>
+<p>Then install the <a class="reference external" href="https://github.com/protocolbuffers/protobuf">protoc</a> compiler
+If you’re on Arch Linux there is a package for it</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Install protobuf from AUR</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ sudo pacman -Syu protobuf
+</pre></div>
+</div>
+</div>
+<div class="section" id="go-import-system-sidebar">
+<h3>Go Import System Sidebar<a class="headerlink" href="#go-import-system-sidebar" title="Permalink to this headline">¶</a></h3>
+<p><strong>OK…</strong> Coming from a python &amp; kotlin background go’s import system is
+a mess to deal with and has already caused me too much greif.</p>
+<p>when I try to run the example code given in the <a class="reference external" href="https://grpc.io/docs/quickstart/go/">quickstart</a> I get this</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">I really wish GOROOT was a Guardians of the Galaxy reference</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>greeter_server/main.go:30:2: package examples/helloworld/helloworld is not in GOROOT <span class="o">(</span>/usr/lib/go/src/examples/helloworld/helloworld<span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<p>Clearly I’ve been spoiled by pythons import system</p>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Everything needs to be in the $GOPATH</dt>
+<dd class="field-odd"><p>I thought this was my problem but it didn’t fix the issue</p>
+</dd>
+</dl>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd"><strong>SUCCESS</strong></dt>
+<dd class="field-odd"><p>In Go,  every program must be part of a package. I did initialize a package, but I
+did so one directory above where I should have. After running</p>
+</dd>
+</dl>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">It’s always something simple isn’t it, That’s 1/2 hour I won’t get back</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ go mod init
+</pre></div>
+</div>
+</div>
+<p>So for future, <strong>not in the GOROOT</strong> means I probably didn’t initalize the package</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../week2.html" class="btn btn-neutral float-left" title="Semantics of RPC" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Blake Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

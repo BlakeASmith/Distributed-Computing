@@ -1,5 +1,8 @@
+Google Article on Distributed Systems
+========================================================
+
 Leslie Lamport Quote
-===============
+--------------------------------------------------------
 
 :A distributed system is: one in which the failure of a computer that
         you didn't even know existed causes your computer to be unuseable
@@ -9,8 +12,9 @@ Leslie Lamport Quote
 * more scalable, you can throw more hardware nodes at the problem
 * shared computation between nodes can lead us to lots of problems
 
-Google Tutorial
-======================
+Tutorial
+--------------------------------------------------------
+
 
 :A distributed system is: an application that executes a collection
                           of protocols to co-ordinate the actions
@@ -18,7 +22,7 @@ Google Tutorial
                           all components coperate together to perform a
                           single or small set of related tasks.
 
-Fault tolerance is really important::
+Fault tolerance is really important:
 
         :Fault Tolerant: the system can recover from failiures without 
                          fucking up something else
@@ -53,7 +57,8 @@ Distributed systems must be designed with the **expectation** of failiure
 * --> **multiplier on the value of simplicity**
 
 Bugs
----------------------------
+________________________________________________________
+
 
 Two major categories of bugs in distributed systems:
 
@@ -67,11 +72,12 @@ Two major categories of bugs in distributed systems:
 
 
 Failiures and Fallacies
----------------------------
+________________________________________________________
+
 
 many types of failiure:
 
-        :haulting failure: the thing just stops::
+        :haulting failure: the thing just stops
 
                 * can't tell if it's slow or dead
                 * timeout goes off, but that doesnt mean it's shut down
@@ -93,7 +99,9 @@ many types of failiure:
 
         :Bysantine: data corruption, malicious programs, a whole list here
 
-Some wrong assumptions can lead to bysantine behaviour::
+Some wrong assumptions can lead to bysantine behaviour
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
         * Reliable network
         * zero latency
@@ -107,7 +115,8 @@ Some wrong assumptions can lead to bysantine behaviour::
 
 
 How?
-----------------------------
+________________________________________________________
+
 
 :client-server: more realistically, service-client where the service is 
                 made up of multiple running nodes
@@ -130,7 +139,8 @@ TCP, UDP, **RPC**
 :**RPC**: Remote Procedure Call, It's like a distributed function call
 
 Remote Procedure Calls
-----------------------------
+________________________________________________________
+
 
 emulates a local procedure call over a network. Arguments are sent to the 
 server through a packet (or multiple). The server executes the requested service
@@ -140,7 +150,8 @@ continue
 
 
 Design Principles
-====================
+________________________________________________________
+
 
 * idenentify failure senarios explicitly and ensure that the code is covered for
   the most likley ones
@@ -160,6 +171,10 @@ presents a trade-off between accessability of the data (the ability to procure i
 and acccuracy of the data.
 
 
-TODO: review forum posts with answers https://coursespaces.uvic.ca/mod/hsuforum/discuss.php?d=87144#p145524
-TODO: Answer some more question from the article
-http://www.hpcs.cs.tsukuba.ac.jp/~tatebe/lecture/h23/dsys/dsd-tutorial.html
+:DONE: review forum posts with answers :done:8/05/20 06:18PM
+:link: https://coursespaces.uvic.ca/mod/hsuforum/discuss.php?d=87144#p145524
+
+:DONE: Answer some more question from the article :done:9/05/20 06:18PM
+:link: http://www.hpcs.cs.tsukuba.ac.jp/~tatebe/lecture/h23/dsys/dsd-tutorial.html
+
+.. include:: google_exercises.rst

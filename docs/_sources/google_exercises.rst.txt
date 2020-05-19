@@ -1,10 +1,13 @@
 
-Exercises:
-========================
+Exercises
+--------------------------------------------------------
+
 
 :Q1: Have you ever encountered a Heisenbug? How did you isolate and fix it
+_________________________________________________________________________
 
-:A: I'm currently working on a text-processing library for recognizing patterns within
+
+    I'm currently working on a text-processing library for recognizing patterns within
     plain text documents and converting them into python objects. Similarly to what 
     we can already do with JSON but for any format. It uses a string template to define a
     'text object' which can then be recognized in text and it's various attributes extracted
@@ -16,21 +19,26 @@ Exercises:
     There is also recursion involved in this process so it can become somewhat difficult 
     to reason about. 
 
+
     I ran into a problem in which the same string template would match a peice of text
     most of the time, except when it didn't. This only happened about 1/10 times and it
     was unclear how to repoduce the bug. 
+
 
     My first approach was to log the current remaining text along with the next sub-pattern
     being considered. I ran a script to attemt the match a few thousand times and used grep
     to get all the lines at which the match failed.
 
+
     I found that in the faliure cases the pattern being considered did not occur until
     much farther along in the template, but was for some reason being attempted early.
+
 
     I isolated the bug to one specific function which was responsible for handling the
     `search` modifer which allows a placholder to be searched for in the text as apposed
     to directly matching the beginning. However there was no indication of what was
     going wrong, and that routine worked in every case I tried to put it through
+
 
     Ultimiatley I found that the bug had nothing to do with the routine itself but with
     how the arguments were supplied. Within the routine a wrapper function was defined to 
@@ -43,6 +51,7 @@ Exercises:
     variable changing between the time that the function was defined and the time that the
     function was invoked
 
+
     Placeholders can be marked as `optional`. If this is the case then the template string
     is evaluated both with and without the placeholder (concurrently). 
     The template string in question
@@ -53,11 +62,18 @@ Exercises:
     thus the value of the pattern variable did not change. However some of the time the 
     branches would return in a different order, resulting in the bug manifesting
 
+
     The solution was to add `pattern=pattern` in the arguments to the wrapper function.
 
-:Q2: What is the difference between caching and data replication
 
-:A: cached data has an expiration date and is not syncronized to the main dataset.
+
+
+
+
+:Q2: What is the difference between caching and data replication
+________________________________________________________
+
+    cached data has an expiration date and is not syncronized to the main dataset.
     typically cached data will only be updated when it is requested. In contrast
     data replication aims to keep the replicated data in the same state as the 
     data which is being replicated. If cached data is continually updated to match

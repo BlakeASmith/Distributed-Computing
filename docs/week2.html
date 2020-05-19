@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Upper Bound &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Clock Exercise" href="clock_exercise/clock_exercise.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Distributied Computing Summer 2020
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="google_article.html">Google Article on Distributed Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aws_beyondelevennines_talk.html">Noes from AWS Beyond Eleven Nines Talk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clock_exercise/clock_exercise.html">Clock Exercise</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Upper Bound</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#multi-core-system-vs-distributed-system">Multi Core system vs Distributed System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#lpc-vs-rpc-semantics">LPC vs RPC semantics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#transperancy-in-ds">Transperancy in DS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#grpc-a-open-source-rpc-library">gRPC a open source RPC Library</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#data-representation">Data Representation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#proto-files">Proto Files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Distributied Computing Summer 2020</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Upper Bound</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/week2.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="upper-bound">
+<h1>Upper Bound<a class="headerlink" href="#upper-bound" title="Permalink to this headline">¶</a></h1>
+<p>upper bound on latency?</p>
+<p>shared bandwidth, busy routers, async communication</p>
+<dl class="field-list simple">
+<dt class="field-odd">Q</dt>
+<dd class="field-odd"><p>How long do you wait before timeout?</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><dl class="simple">
+<dt>difficult to determine if server is alive or dead</dt><dd><ul>
+<li><p>could be a bug in the router or something else unexpected</p></li>
+<li><p>Independant failiure is a real struggle</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>we need to engineer the system to always be able to make forward progress</p></li>
+</ul>
+</div>
+<div class="section" id="multi-core-system-vs-distributed-system">
+<h1>Multi Core system vs Distributed System<a class="headerlink" href="#multi-core-system-vs-distributed-system" title="Permalink to this headline">¶</a></h1>
+<p>#DONE: Multi X video 16/05/20 01:26PM</p>
+<p>Multi core computers are not real distributed system</p>
+<ul class="simple">
+<li><p>not as much failiure potential as a DS</p></li>
+<li><p>core failiure can happen, but is much less likley</p></li>
+<li><dl class="simple">
+<dt>failiures of one core tend to lead to catestrophic failiures</dt><dd><ul>
+<li><p>so it’s hard not to notice the failiures</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="lpc-vs-rpc-semantics">
+<h1>LPC vs RPC semantics<a class="headerlink" href="#lpc-vs-rpc-semantics" title="Permalink to this headline">¶</a></h1>
+<p>#DONE: LPC vs RPC video 16/05/20 01:35PM</p>
+<dl class="field-list simple">
+<dt class="field-odd">LPC</dt>
+<dd class="field-odd"><p>it works or it doesn’t</p>
+<ul class="simple">
+<li><p>occurs exactly once</p></li>
+</ul>
+</dd>
+<dt class="field-even">RPC</dt>
+<dd class="field-even"><p>it might have worked? it might have not?</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>impossible to guarentee “exactly once” execution</dt><dd><ul>
+<li><p>server could go down</p></li>
+<li><p>race conditions</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>“at most once” is the best we can do</p></li>
+<li><p>lots of stuff in between that can go wrong</p></li>
+<li><p>It’s hard to tell and can lead to some really bad side effects!</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="transperancy-in-ds">
+<h1>Transperancy in DS<a class="headerlink" href="#transperancy-in-ds" title="Permalink to this headline">¶</a></h1>
+<p>#DONE: Transperancy Video 16/05/20 01:39PM</p>
+<p>The idea of RPC is nice since, if it acts like a LPC, it is
+easy to use and reason about. However there is a trade off
+between that ease of use (similarity to LPC) and Transperancy
+(How much you get to know about that the DS is doing)</p>
+<p>A total lack of transperancy means a seemingly easy to use function that
+looks like an LPC. But if something is going wrong in the DS (network errors,
+downed server, slow server, etc.) it will be harder to sus out</p>
+<p>How much control do you give to the user of the RPC?
+How do you name the RPC? What about binding?</p>
+</div>
+<div class="section" id="grpc-a-open-source-rpc-library">
+<h1>gRPC a open source RPC Library<a class="headerlink" href="#grpc-a-open-source-rpc-library" title="Permalink to this headline">¶</a></h1>
+<p>#STARTED: gRPC prelab :start:16/05/20 01:48PM</p>
+<dl class="field-list simple">
+<dt class="field-odd">Q</dt>
+<dd class="field-odd"><p>What do you find most intersing about this and why?</p>
+</dd>
+<dt class="field-even">Main Idea</dt>
+<dd class="field-even"><ol class="arabic simple">
+<li><p>Specify methods with parameters and return types</p></li>
+<li><p>Implement that interface on the server</p></li>
+<li><p>Create a stub on the client side which provides
+that interface</p></li>
+</ol>
+</dd>
+</dl>
+<div class="section" id="data-representation">
+<h2>Data Representation<a class="headerlink" href="#data-representation" title="Permalink to this headline">¶</a></h2>
+<p>gRPC uses something called <strong>Protocol Buffers</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Protocol Buffer</dt>
+<dd class="field-odd"><p>An open source mechanism for serializing structured data
+(Google did it). It can also be used with other formats
+such as JSON</p>
+</dd>
+</dl>
+<div class="section" id="proto-files">
+<h3>Proto Files<a class="headerlink" href="#proto-files" title="Permalink to this headline">¶</a></h3>
+<p>a <strong>Proto File</strong> specifies what the data will look like
+(similar to a class/struct definition)</p>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">message</span> <span class="n">Person</span> <span class="p">{</span>
+        <span class="n">string</span> <span class="n">name</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">int32</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="nb">bool</span> <span class="n">has_ponycopter</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>Then a command line utility <strong>protoc</strong> can be used to generate classes
+in any of your perferred languages</p>
+<p><strong>Services</strong> (rpc’s) are defined in the same <em>.proto</em> files like this</p>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">service</span> <span class="n">Greeter</span> <span class="p">{</span>
+        <span class="n">rpc</span> <span class="n">Name</span> <span class="p">(</span><span class="n">ParamType</span><span class="p">)</span> <span class="n">returns</span> <span class="p">(</span><span class="n">ReturnType</span><span class="p">)</span> <span class="p">{}</span>
+<span class="p">{</span>
+</pre></div>
+</td></tr></table></div>
+<p>here <strong>ParamType</strong> is a <strong>message</strong> which will be the type for the
+parameter being passed and <strong>ReturnType</strong> is similary a <strong>message</strong>
+which will be returned by the RPC</p>
+<p>#TODO: DNS TTL prelab</p>
+<p>#TODO: break down go code from lab 1
+#TODO: :optional: Development of DNS
+#TODO: :optional: Microkernal approach to Host networking</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="clock_exercise/clock_exercise.html" class="btn btn-neutral float-left" title="Clock Exercise" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Blake Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

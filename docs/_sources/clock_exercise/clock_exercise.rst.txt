@@ -5,7 +5,11 @@ Clock Exercise
 ----------------------------
 
 After each successful request to the NTP server I divided the 
-calculated clock offset by :math:`10 + (10*numfails)` where
+calculated clock offset by where
+
+.. math:: 
+        10 + 10*numfails
+
 `numfails` is the number of failed attempts since the last 
 successful attempt. Since a request to the server is made every 10 
 seconds this gives a good approximation for the drift per second (in microseconds). 
