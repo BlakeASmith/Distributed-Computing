@@ -13,7 +13,7 @@
 import os
 import sys
 from pathlib import Path
-files = Path('../notes').glob('**/*.rst')
+files = Path('../').glob('**/*.rst')
 for f in files:
     sys.path.insert(0, os.path.abspath(str(f)))
 

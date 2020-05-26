@@ -14,12 +14,9 @@ import "strconv"
 // and reply for an RPC.
 //
 
-type ExampleArgs struct {
-	X int
-}
-
-type ExampleReply struct {
-	Y int
+type KeyValue struct {
+	Key   string
+	Value string
 }
 
 // Add your RPC definitions here.
@@ -30,8 +27,20 @@ type WorkRequest struct {
 }
 
 type WorkerTask struct {
-	Filename string
-	reduce   bool
+	Filename     string
+	Reduce       bool
+	WorkerNumber int
+	Job          int
+	NReducers    int
+	Finish       bool
+}
+
+type SortedKV struct {
+	KV  KeyValue
+	Bin int
+}
+type CompleteConfirmation struct {
+	Wait bool
 }
 
 // Cook up a unique-ish UNIX-domain socket name

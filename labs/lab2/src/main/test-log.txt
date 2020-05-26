@@ -1,0 +1,6 @@
+*** Starting wc test.
+unexpected EOF
+unexpected EOF
+mr-wc-all mr-correct-wc.txt differ: byte 1, line 1
+--- wc output is not the same as mr-correct-wc.txt
+--- wc test: FAIL
