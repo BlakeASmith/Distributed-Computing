@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Upper Bound &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
+  <title>Semantics of RPC &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
   
 
   
@@ -36,6 +36,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Diggind in to the gRPC example code" href="grpc/grpc.html" />
     <link rel="prev" title="Clock Exercise" href="clock_exercise/clock_exercise.html" /> 
 </head>
 
@@ -85,17 +86,21 @@
 <li class="toctree-l1"><a class="reference internal" href="google_article.html">Google Article on Distributed Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="aws_beyondelevennines_talk.html">Noes from AWS Beyond Eleven Nines Talk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="clock_exercise/clock_exercise.html">Clock Exercise</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Upper Bound</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#multi-core-system-vs-distributed-system">Multi Core system vs Distributed System</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#lpc-vs-rpc-semantics">LPC vs RPC semantics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#transperancy-in-ds">Transperancy in DS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#grpc-a-open-source-rpc-library">gRPC a open source RPC Library</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#data-representation">Data Representation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#proto-files">Proto Files</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Semantics of RPC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#upper-bound">Upper Bound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multi-core-system-vs-distributed-system">Multi Core system vs Distributed System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lpc-vs-rpc-semantics">LPC vs RPC semantics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transperancy-in-ds">Transperancy in DS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#grpc-a-open-source-rpc-library">gRPC a open source RPC Library</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#data-representation">Data Representation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#proto-files">Proto Files</a></li>
 </ul>
 </li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="grpc/grpc.html">Diggind in to the gRPC example code</a></li>
 </ul>
 
             
@@ -141,7 +146,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Upper Bound</li>
+      <li>Semantics of RPC</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -160,18 +165,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="upper-bound">
-<h1>Upper Bound<a class="headerlink" href="#upper-bound" title="Permalink to this headline">¶</a></h1>
-<p>upper bound on latency?</p>
-<p>shared bandwidth, busy routers, async communication</p>
+  <div class="section" id="semantics-of-rpc">
+<h1>Semantics of RPC<a class="headerlink" href="#semantics-of-rpc" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="upper-bound">
+<h2>Upper Bound<a class="headerlink" href="#upper-bound" title="Permalink to this headline">¶</a></h2>
 <dl class="field-list simple">
-<dt class="field-odd">Q</dt>
-<dd class="field-odd"><p>How long do you wait before timeout?</p>
+<dt class="field-odd">upper bound on latency?</dt>
+<dd class="field-odd"><p>shared bandwidth, busy routers, async communication</p>
+</dd>
+<dt class="field-even">Question</dt>
+<dd class="field-even"><p>How long do you wait before timeout?</p>
 </dd>
 </dl>
 <ul class="simple">
 <li><dl class="simple">
-<dt>difficult to determine if server is alive or dead</dt><dd><ul>
+<dt>it’s difficult to determine if server is alive or dead</dt><dd><ul>
 <li><p>could be a bug in the router or something else unexpected</p></li>
 <li><p>Independant failiure is a real struggle</p></li>
 </ul>
@@ -182,7 +190,7 @@
 </ul>
 </div>
 <div class="section" id="multi-core-system-vs-distributed-system">
-<h1>Multi Core system vs Distributed System<a class="headerlink" href="#multi-core-system-vs-distributed-system" title="Permalink to this headline">¶</a></h1>
+<h2>Multi Core system vs Distributed System<a class="headerlink" href="#multi-core-system-vs-distributed-system" title="Permalink to this headline">¶</a></h2>
 <p>#DONE: Multi X video 16/05/20 01:26PM</p>
 <p>Multi core computers are not real distributed system</p>
 <ul class="simple">
@@ -198,7 +206,7 @@
 </ul>
 </div>
 <div class="section" id="lpc-vs-rpc-semantics">
-<h1>LPC vs RPC semantics<a class="headerlink" href="#lpc-vs-rpc-semantics" title="Permalink to this headline">¶</a></h1>
+<h2>LPC vs RPC semantics<a class="headerlink" href="#lpc-vs-rpc-semantics" title="Permalink to this headline">¶</a></h2>
 <p>#DONE: LPC vs RPC video 16/05/20 01:35PM</p>
 <dl class="field-list simple">
 <dt class="field-odd">LPC</dt>
@@ -226,7 +234,7 @@
 </dl>
 </div>
 <div class="section" id="transperancy-in-ds">
-<h1>Transperancy in DS<a class="headerlink" href="#transperancy-in-ds" title="Permalink to this headline">¶</a></h1>
+<h2>Transperancy in DS<a class="headerlink" href="#transperancy-in-ds" title="Permalink to this headline">¶</a></h2>
 <p>#DONE: Transperancy Video 16/05/20 01:39PM</p>
 <p>The idea of RPC is nice since, if it acts like a LPC, it is
 easy to use and reason about. However there is a trade off
@@ -239,14 +247,19 @@ downed server, slow server, etc.) it will be harder to sus out</p>
 How do you name the RPC? What about binding?</p>
 </div>
 <div class="section" id="grpc-a-open-source-rpc-library">
-<h1>gRPC a open source RPC Library<a class="headerlink" href="#grpc-a-open-source-rpc-library" title="Permalink to this headline">¶</a></h1>
+<h2>gRPC a open source RPC Library<a class="headerlink" href="#grpc-a-open-source-rpc-library" title="Permalink to this headline">¶</a></h2>
 <p>#STARTED: gRPC prelab :start:16/05/20 01:48PM</p>
 <dl class="field-list simple">
-<dt class="field-odd">Q</dt>
+<dt class="field-odd">Question</dt>
 <dd class="field-odd"><p>What do you find most intersing about this and why?</p>
 </dd>
-<dt class="field-even">Main Idea</dt>
-<dd class="field-even"><ol class="arabic simple">
+</dl>
+<hr class="docutils" />
+<p>definitly streaming messages
+#TODO:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Main Idea</dt>
+<dd class="field-odd"><ol class="arabic simple">
 <li><p>Specify methods with parameters and return types</p></li>
 <li><p>Implement that interface on the server</p></li>
 <li><p>Create a stub on the client side which provides
@@ -255,7 +268,7 @@ that interface</p></li>
 </dd>
 </dl>
 <div class="section" id="data-representation">
-<h2>Data Representation<a class="headerlink" href="#data-representation" title="Permalink to this headline">¶</a></h2>
+<h3>Data Representation<a class="headerlink" href="#data-representation" title="Permalink to this headline">¶</a></h3>
 <p>gRPC uses something called <strong>Protocol Buffers</strong></p>
 <dl class="field-list simple">
 <dt class="field-odd">Protocol Buffer</dt>
@@ -265,7 +278,7 @@ such as JSON</p>
 </dd>
 </dl>
 <div class="section" id="proto-files">
-<h3>Proto Files<a class="headerlink" href="#proto-files" title="Permalink to this headline">¶</a></h3>
+<h4>Proto Files<a class="headerlink" href="#proto-files" title="Permalink to this headline">¶</a></h4>
 <p>a <strong>Proto File</strong> specifies what the data will look like
 (similar to a class/struct definition)</p>
 <div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
@@ -299,6 +312,7 @@ which will be returned by the RPC</p>
 </div>
 </div>
 </div>
+</div>
 
 
            </div>
@@ -307,6 +321,8 @@ which will be returned by the RPC</p>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="grpc/grpc.html" class="btn btn-neutral float-right" title="Diggind in to the gRPC example code" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="clock_exercise/clock_exercise.html" class="btn btn-neutral float-left" title="Clock Exercise" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

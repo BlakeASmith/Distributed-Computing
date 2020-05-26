@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to Blake’s Distributied Computing Notes &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
+  <title>Welcome to Blake’s Distributed Computing Notes &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
   
 
   
@@ -85,11 +85,9 @@
 <li class="toctree-l1"><a class="reference internal" href="google_article.html">Google Article on Distributed Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="aws_beyondelevennines_talk.html">Noes from AWS Beyond Eleven Nines Talk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="clock_exercise/clock_exercise.html">Clock Exercise</a></li>
-<li class="toctree-l1"><a class="reference internal" href="week2.html">Upper Bound</a></li>
-<li class="toctree-l1"><a class="reference internal" href="week2.html#multi-core-system-vs-distributed-system">Multi Core system vs Distributed System</a></li>
-<li class="toctree-l1"><a class="reference internal" href="week2.html#lpc-vs-rpc-semantics">LPC vs RPC semantics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="week2.html#transperancy-in-ds">Transperancy in DS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="week2.html#grpc-a-open-source-rpc-library">gRPC a open source RPC Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week2.html">Semantics of RPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grpc/grpc.html">Diggind in to the gRPC example code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labs/lab2.html">Lab 2: A Simplified Distributed Map Reduce</a></li>
 </ul>
 
             
@@ -135,7 +133,7 @@
     
       <li><a href="#">Docs</a> &raquo;</li>
         
-      <li>Welcome to Blake’s Distributied Computing Notes</li>
+      <li>Welcome to Blake’s Distributed Computing Notes</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -154,8 +152,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="welcome-to-blake-s-distributied-computing-notes">
-<h1>Welcome to Blake’s Distributied Computing Notes<a class="headerlink" href="#welcome-to-blake-s-distributied-computing-notes" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="welcome-to-blake-s-distributed-computing-notes">
+<h1>Welcome to Blake’s Distributed Computing Notes<a class="headerlink" href="#welcome-to-blake-s-distributed-computing-notes" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -177,27 +175,30 @@
 <li class="toctree-l2"><a class="reference internal" href="clock_exercise/clock_exercise.html#graphing-the-clock-drift">Graphing the Clock Drift</a></li>
 <li class="toctree-l2"><a class="reference internal" href="clock_exercise/clock_exercise.html#python-code-for-the-ntp-client">Python Code for the NTP client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="clock_exercise/clock_exercise.html#python-code-for-parsing-the-log-and-producing-the-graphs">Python Code for Parsing the Log and Producing the Graphs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="clock_exercise/clock_exercise.html#the-head-of-the-log-output">The Head of the Log Output</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="week2.html">Upper Bound</a></li>
-<li class="toctree-l1"><a class="reference internal" href="week2.html#multi-core-system-vs-distributed-system">Multi Core system vs Distributed System</a></li>
-<li class="toctree-l1"><a class="reference internal" href="week2.html#lpc-vs-rpc-semantics">LPC vs RPC semantics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="week2.html#transperancy-in-ds">Transperancy in DS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="week2.html#grpc-a-open-source-rpc-library">gRPC a open source RPC Library</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="week2.html#data-representation">Data Representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week2.html">Semantics of RPC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="week2.html#upper-bound">Upper Bound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="week2.html#multi-core-system-vs-distributed-system">Multi Core system vs Distributed System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="week2.html#lpc-vs-rpc-semantics">LPC vs RPC semantics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="week2.html#transperancy-in-ds">Transperancy in DS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="week2.html#grpc-a-open-source-rpc-library">gRPC a open source RPC Library</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="grpc/grpc.html">Diggind in to the gRPC example code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="grpc/grpc.html#installing-grpc">Installing gRPC</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="labs/lab2.html">Lab 2: A Simplified Distributed Map Reduce</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="labs/lab2.html#basic-approach">Basic Approach</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labs/lab2.html#implementation">Implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labs/lab2.html#the-master-process">The Master Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labs/lab2.html#limitations">Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labs/lab2.html#dev-log">Dev Log</a></li>
 </ul>
 </li>
 </ul>
 </div>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
 </div>
 
 

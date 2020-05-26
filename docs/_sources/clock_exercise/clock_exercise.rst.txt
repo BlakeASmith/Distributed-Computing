@@ -5,15 +5,10 @@ Clock Exercise
 ----------------------------
 
 After each successful request to the NTP server I divided the 
-calculated clock offset by where
-
-.. math:: 
-        10 + 10*numfails
-
-`numfails` is the number of failed attempts since the last 
+calculated clock offset by :math:`10 + 10*numfails` where
+**numfails** is the number of failed attempts since the last 
 successful attempt. Since a request to the server is made every 10 
 seconds this gives a good approximation for the drift per second (in microseconds). 
-    
 I kept an array of these values and calculated the average at each iteration. 
 The final average was :math:`12.032miliseconds`
 
@@ -21,7 +16,7 @@ The final average was :math:`12.032miliseconds`
 Picking the Timeout
 -------------------
 
-:Q: what timeout did you pick to detect a failed interaction? What 
+:Question: what timeout did you pick to detect a failed interaction? What 
     happens if the server's response packet arrives after that timeout
 
 I picked **10 seconds** as the timeout. The resulting packet loss rate was :math:`4%`. 
@@ -86,10 +81,4 @@ Python Code for Parsing the Log and Producing the Graphs
 ---------------------------
 
 .. literalinclude:: parse_log.py
-
-The Head of the Log Output
----------------------------
-
-.. literalinclude:: rtt_offset.log
-        :lines: 1-100
 

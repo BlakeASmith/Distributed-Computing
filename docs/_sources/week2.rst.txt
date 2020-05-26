@@ -1,13 +1,15 @@
+Semantics of RPC
+========================================================
+
 Upper Bound
 ----------------------------
 
-upper bound on latency?
+:upper bound on latency?: 
+        shared bandwidth, busy routers, async communication
 
-shared bandwidth, busy routers, async communication
+:Question: How long do you wait before timeout?
 
-:Q: How long do you wait before timeout?
-
-* difficult to determine if server is alive or dead
+* it's difficult to determine if server is alive or dead
         * could be a bug in the router or something else unexpected   
         * Independant failiure is a real struggle
 * we need to engineer the system to always be able to make forward progress
@@ -62,7 +64,12 @@ gRPC a open source RPC Library
 ----------------------------
 #STARTED: gRPC prelab :start:16/05/20 01:48PM
 
-:Q: What do you find most intersing about this and why?
+:Question: What do you find most intersing about this and why?
+________________________________________________________
+
+definitly streaming messages
+#TODO:  
+
 
 :Main Idea: 1. Specify methods with parameters and return types 
             2. Implement that interface on the server
