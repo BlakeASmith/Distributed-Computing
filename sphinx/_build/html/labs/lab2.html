@@ -1,0 +1,785 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Lab 2: A Simplified Distributed Map Reduce &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Diggind in to the gRPC example code" href="../grpc/grpc.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Distributied Computing Summer 2020
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../google_article.html">Google Article on Distributed Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../aws_beyondelevennines_talk.html">Noes from AWS Beyond Eleven Nines Talk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clock_exercise/clock_exercise.html">Clock Exercise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../week2.html">Semantics of RPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../grpc/grpc.html">Diggind in to the gRPC example code</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Lab 2: A Simplified Distributed Map Reduce</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-approach">Basic Approach</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implementation">Implementation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#type-definitions">Type Definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-worker-process">The Worker Process</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#the-worker-function">The Worker Function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#the-map-function">The Map Function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#the-reduce-function">The Reduce Function</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#the-master-process">The Master Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#limitations">Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dev-log">Dev Log</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Distributied Computing Summer 2020</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Lab 2: A Simplified Distributed Map Reduce</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/labs/lab2.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="lab-2-a-simplified-distributed-map-reduce">
+<h1>Lab 2: A Simplified Distributed Map Reduce<a class="headerlink" href="#lab-2-a-simplified-distributed-map-reduce" title="Permalink to this headline">¶</a></h1>
+<p>In this lab we implemented a “distributed” map reduce
+(relies on a shared file system but otherwise runs independently).
+There is one “master” process handling the assignment of map and reduce jobs.</p>
+<p>During the mapping phase the Worker
+process reads in a text file and produces a
+set of key value pairs using a map function provided by
+a plug-in. The results from the map function are stored in an intermediary
+file from which the master can make files for the reduce tasks.</p>
+<p>Once all the mapping is complete the Master goes through
+the files produced from the mapping phase
+and produces a file for each reduce task that will be run.</p>
+<p>Finally for each reduce job a Worker process groups
+the values by their keys, producing
+a <code class="xref py py-obj docutils literal notranslate"><span class="pre">map[string][]string</span></code>. Then the reduce function
+provided by the plug-in will be called  on each
+slice of strings and it’s associated key.
+The resulting value will be stored with it’s key in
+an output file.</p>
+<p>Combining the results from all the reduce tasks is handled
+by the provided template code.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This was my first time working with go so I may have done some
+silly things in my implementation. I’m sure i’ll come to see
+the issues in the coming weeks.</p>
+</div>
+<div class="section" id="basic-approach">
+<h2>Basic Approach<a class="headerlink" href="#basic-approach" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Worker processes invoke a RPC <code class="xref py py-func docutils literal notranslate"><span class="pre">RequestTask()</span></code> to receive
+a job assignment from the master</p></li>
+<li><p>Once a Worker completes a job it invokes another RPC <code class="xref py py-func docutils literal notranslate"><span class="pre">ConfirmComplete()</span></code>
+to inform the Master that the job has been finished</p></li>
+<li><p>Workers continue to ask for assignments with <code class="xref py py-func docutils literal notranslate"><span class="pre">RequestTask()</span></code>
+until a <code class="xref py py-obj docutils literal notranslate"><span class="pre">Finished</span></code> flag is set in the response indicating there are
+no more jobs</p></li>
+<li><p>When all map jobs are complete a set of reduce jobs will be created.
+A mutex lock will be held while preparing the files and creating the reduce
+jobs so any Workers requesting a task at that time will hang until that
+mutex is unlocked (this eliminates the need for explicit waiting)</p></li>
+<li><p>Once reduce jobs are finished we will return true in the <code class="xref py py-func docutils literal notranslate"><span class="pre">Done()</span></code>
+which is called by a goroutine in the Master process every second (provided in the template code)</p></li>
+</ol>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="type-definitions">
+<h3>Type Definitions<a class="headerlink" href="#type-definitions" title="Permalink to this headline">¶</a></h3>
+<p>I created types for the following purposes:</p>
+<dl class="field-list simple">
+<dt class="field-odd">WorkerTask</dt>
+<dd class="field-odd"><p>a struct containing information about a job for the worker
+to use</p>
+</dd>
+<dt class="field-even">CompleteConfirmation</dt>
+<dd class="field-even"><p>Information returned from <code class="xref py py-func docutils literal notranslate"><span class="pre">ConfirmComplete()</span></code>.
+It’s used to tell the Worker thread to wait when
+necessary</p>
+</dd>
+<dt class="field-odd">SortedKV</dt>
+<dd class="field-odd"><p>A KeyValue pair that has a reduce task number (Bin number)
+associated to it. Used to separate the results from map jobs
+into files for the reduce tasks</p>
+</dd>
+<dt class="field-even">JobInfo</dt>
+<dd class="field-even"><p>Information about a job for the Master process</p>
+</dd>
+<dt class="field-odd">Master</dt>
+<dd class="field-odd"><p>The struct for the Master process. Contains global state
+and Mutexes.</p>
+</dd>
+</dl>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Definition from rpc.go</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// KeyValue type provided in the template</span>
+<span class="kd">type</span> <span class="nx">KeyValue</span> <span class="kd">struct</span> <span class="p">{</span>
+        <span class="nx">Key</span>   <span class="kt">string</span>
+        <span class="nx">Value</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">// Infromation for a Worker process about a Job</span>
+<span class="kd">type</span> <span class="nx">WorkerTask</span> <span class="kd">struct</span> <span class="p">{</span>
+        <span class="nx">Filename</span>     <span class="kt">string</span>
+        <span class="nx">Reduce</span>       <span class="kt">bool</span>
+        <span class="nx">WorkerNumber</span> <span class="kt">int</span>
+        <span class="nx">Job</span>          <span class="kt">int</span>
+        <span class="nx">NReducers</span>    <span class="kt">int</span>
+        <span class="nx">Finish</span>       <span class="kt">bool</span>
+<span class="p">}</span>
+
+<span class="c1">// Confirmation provided to a worker after they</span>
+<span class="c1">// report a job as finished</span>
+<span class="kd">type</span> <span class="nx">CompleteConfirmation</span> <span class="kd">struct</span> <span class="p">{</span>
+        <span class="nx">Wait</span> <span class="kt">bool</span>
+<span class="p">}</span>
+
+<span class="c1">// Used to designate which reduce task should handle</span>
+<span class="c1">// this key value pair (Bin is the reduce task number which</span>
+<span class="c1">// should process it, it&#39;s computed using a hash function)</span>
+<span class="kd">type</span> <span class="nx">SortedKV</span> <span class="kd">struct</span> <span class="p">{</span>
+        <span class="nx">KV</span>  <span class="nx">KeyValue</span>
+        <span class="nx">Bin</span> <span class="kt">int</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Definitions from master.go</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">JobInfo</span> <span class="kd">struct</span> <span class="p">{</span>
+        <span class="c1">// The Worker number that the task has been asssigned to</span>
+        <span class="nx">Assigned</span> <span class="kt">int</span>
+        <span class="c1">// Flag to indicate that the task is finished</span>
+        <span class="nx">Complete</span> <span class="kt">bool</span>
+        <span class="c1">// name of the file being mapped/reduced</span>
+        <span class="nx">Filename</span> <span class="kt">string</span>
+        <span class="c1">// flag indicating a Reduce job</span>
+        <span class="nx">Reducing</span> <span class="kt">bool</span>
+        <span class="c1">// Counter used to determine that the task has ran too long</span>
+        <span class="nx">RunTime</span> <span class="kt">int</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">Master</span> <span class="kd">struct</span> <span class="p">{</span>
+        <span class="c1">// The list of jobs</span>
+        <span class="nx">Jobs</span>     <span class="p">[]</span><span class="nx">JobInfo</span>
+        <span class="nx">JobMutex</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">Mutex</span>
+        <span class="c1">// The reduce files</span>
+        <span class="nx">ReduceBuckets</span> <span class="p">[]</span><span class="o">*</span><span class="nx">os</span><span class="p">.</span><span class="nx">File</span>
+        <span class="c1">// Mutex for the master</span>
+        <span class="nx">ReduceMutex</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">Mutex</span>
+        <span class="c1">// Number of reduces</span>
+        <span class="nx">nReducers</span> <span class="kt">int</span>
+        <span class="c1">// Flag to indicate that we are in the reduce phase</span>
+        <span class="nx">Reducing</span> <span class="kt">bool</span>
+        <span class="c1">// counter used to assign ids to tasks</span>
+        <span class="nx">taskcount</span> <span class="kt">int</span>
+        <span class="nx">FlagMutex</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">Mutex</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="the-worker-process">
+<h3>The Worker Process<a class="headerlink" href="#the-worker-process" title="Permalink to this headline">¶</a></h3>
+<p>The code for the Worker consists mainly of 3 important functions</p>
+<dl class="py function">
+<dt id="Reduce">
+<code class="sig-name descname">Reduce</code><span class="sig-paren">(</span><em class="sig-param">reducef func(string</em>, <span class="optional">[</span><span class="optional">]</span><em class="sig-param">string) string</em><span class="sig-paren">)</span><a class="headerlink" href="#Reduce" title="Permalink to this definition">¶</a></dt>
+<dd><p>handles processing a reduce job</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Map">
+<code class="sig-name descname">Map</code><span class="sig-paren">(</span><em class="sig-param">mapf func(string</em>, <em class="sig-param">string) []Keyvalue</em><span class="sig-paren">)</span><a class="headerlink" href="#Map" title="Permalink to this definition">¶</a></dt>
+<dd><p>process a map job</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Worker">
+<code class="sig-name descname">Worker</code><span class="sig-paren">(</span><em class="sig-param">mapf func(string</em>, <em class="sig-param">string) []KeyValue</em>, <em class="sig-param">reducef func(string</em>, <span class="optional">[</span><span class="optional">]</span><em class="sig-param">string) string</em><span class="sig-paren">)</span><a class="headerlink" href="#Worker" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main entry point for a
+Worker process to invoked by the template code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapf</strong> (<em>func</em>) – The map function from the plugin</p></li>
+<li><p><strong>reducef</strong> (<em>func</em>) – the reduce function from the plugin</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="section" id="the-worker-function">
+<h4>The Worker Function<a class="headerlink" href="#the-worker-function" title="Permalink to this headline">¶</a></h4>
+<p>The <a class="reference internal" href="#Worker" title="Worker"><code class="xref py py-func docutils literal notranslate"><span class="pre">Worker()</span></code></a> function calls the <code class="xref py py-func docutils literal notranslate"><span class="pre">RequestTask()</span></code>
+RPC from the Master, invokes the appropriate handler
+(<a class="reference internal" href="#Map" title="Map"><code class="xref py py-func docutils literal notranslate"><span class="pre">Map()</span></code></a> for <a class="reference internal" href="#Reduce" title="Reduce"><code class="xref py py-func docutils literal notranslate"><span class="pre">Reduce()</span></code></a>) and then informs the
+Master of completion using the <code class="xref py py-func docutils literal notranslate"><span class="pre">ConfirmComplete()</span></code>
+RPC</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">Worker</span><span class="p">(</span><span class="nx">mapf</span> <span class="kd">func</span><span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="kt">string</span><span class="p">)</span> <span class="p">[]</span><span class="nx">KeyValue</span><span class="p">,</span>
+        <span class="nx">reducef</span> <span class="kd">func</span><span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="k">for</span> <span class="p">{</span>
+                <span class="nx">args</span> <span class="o">:=</span> <span class="nx">WorkRequest</span><span class="p">{}</span>
+                <span class="nx">resp</span> <span class="o">:=</span> <span class="nx">WorkerTask</span><span class="p">{}</span>
+                <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;requesting a task from the Master&quot;</span><span class="p">)</span>
+                <span class="nx">call</span><span class="p">(</span><span class="s">&quot;Master.RequestTask&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">resp</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nx">resp</span><span class="p">.</span><span class="nx">Finish</span> <span class="p">{</span>
+                        <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;quitting worker&quot;</span><span class="p">)</span>
+                        <span class="k">return</span>
+                <span class="p">}</span>
+
+                <span class="k">if</span> <span class="nx">resp</span><span class="p">.</span><span class="nx">Filename</span> <span class="o">==</span> <span class="s">&quot;&quot;</span> <span class="p">{</span>
+                        <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;sleeping due to empty filename&quot;</span><span class="p">)</span>
+                        <span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+                        <span class="k">continue</span>
+                <span class="p">}</span>
+
+                <span class="k">if</span> <span class="nx">resp</span><span class="p">.</span><span class="nx">Reduce</span> <span class="p">{</span>
+                        <span class="nx">Reduce</span><span class="p">(</span><span class="nx">resp</span><span class="p">,</span> <span class="nx">reducef</span><span class="p">)</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                        <span class="nx">Map</span><span class="p">(</span><span class="nx">resp</span><span class="p">,</span> <span class="nx">mapf</span><span class="p">)</span>
+                <span class="p">}</span>
+
+                <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Confirming completion to the master&quot;</span><span class="p">)</span>
+                <span class="nx">confirm</span> <span class="o">:=</span> <span class="nx">CompleteConfirmation</span><span class="p">{}</span>
+                <span class="nx">call</span><span class="p">(</span><span class="s">&quot;Master.ConfirmFinish&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">resp</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">confirm</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nx">confirm</span><span class="p">.</span><span class="nx">Wait</span> <span class="p">{</span>
+                        <span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-map-function">
+<h4>The Map Function<a class="headerlink" href="#the-map-function" title="Permalink to this headline">¶</a></h4>
+<p>The <a class="reference internal" href="#Map" title="Map"><code class="xref py py-func docutils literal notranslate"><span class="pre">Map()</span></code></a> function is responsible for running a map job
+and producing an intermediate file</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">Map</span><span class="p">(</span><span class="nx">task</span> <span class="nx">WorkerTask</span><span class="p">,</span> <span class="nx">mapf</span> <span class="kd">func</span><span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="kt">string</span><span class="p">)</span> <span class="p">[]</span><span class="nx">KeyValue</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">filename</span> <span class="o">:=</span> <span class="nx">task</span><span class="p">.</span><span class="nx">Filename</span>
+        <span class="c1">//log.Printf(&quot;reading in the task content from %s\n&quot;, filename)</span>
+        <span class="nx">content</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ioutil</span><span class="p">.</span><span class="nx">ReadFile</span><span class="p">(</span><span class="nx">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="c1">//log.Printf(&quot;creating a temporary file for %s&quot;, filename)</span>
+        <span class="nx">tempfilename</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Sprintf</span><span class="p">(</span><span class="s">&quot;temp_map_%s&quot;</span><span class="p">,</span> <span class="nx">task</span><span class="p">.</span><span class="nx">Job</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="nx">f</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ioutil</span><span class="p">.</span><span class="nx">TempFile</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">,</span> <span class="nx">tempfilename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="c1">//log.Printf(&quot;performing the map operation on %s\n&quot;, filename)</span>
+        <span class="c1">// perform the map and put values in itermediate file</span>
+
+        <span class="nx">results</span> <span class="o">:=</span> <span class="nx">mapf</span><span class="p">(</span><span class="nx">filename</span><span class="p">,</span> <span class="nb">string</span><span class="p">(</span><span class="nx">content</span><span class="p">))</span>
+        <span class="c1">//log.Printf(&quot;writing data into %s\n&quot;, tempfilename)</span>
+
+        <span class="nx">encoder</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">NewEncoder</span><span class="p">(</span><span class="nx">f</span><span class="p">)</span>
+        <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">kv</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">results</span> <span class="p">{</span>
+                <span class="nx">skv</span> <span class="o">:=</span> <span class="nx">SortedKV</span><span class="p">{</span><span class="nx">KV</span><span class="p">:</span> <span class="nx">kv</span><span class="p">,</span> <span class="nx">Bin</span><span class="p">:</span> <span class="nx">ihash</span><span class="p">(</span><span class="nx">kv</span><span class="p">.</span><span class="nx">Key</span><span class="p">)</span> <span class="o">%</span> <span class="nx">task</span><span class="p">.</span><span class="nx">NReducers</span><span class="p">}</span>
+                <span class="nx">encoder</span><span class="p">.</span><span class="nx">Encode</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">skv</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="c1">// rename the temp file once we know the job is done</span>
+        <span class="nx">newname</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Sprintf</span><span class="p">(</span><span class="s">&quot;map_%d&quot;</span><span class="p">,</span> <span class="nx">task</span><span class="p">.</span><span class="nx">Job</span><span class="p">)</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;renaming %s to %s\n&quot;</span><span class="p">,</span> <span class="nx">tempfilename</span><span class="p">,</span> <span class="nx">newname</span><span class="p">)</span>
+        <span class="nx">err</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Rename</span><span class="p">(</span><span class="nx">f</span><span class="p">.</span><span class="nx">Name</span><span class="p">(),</span> <span class="nx">newname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-reduce-function">
+<h4>The Reduce Function<a class="headerlink" href="#the-reduce-function" title="Permalink to this headline">¶</a></h4>
+<p>The <a class="reference internal" href="#Reduce" title="Reduce"><code class="xref py py-func docutils literal notranslate"><span class="pre">Reduce()</span></code></a> function handles the reduce jobs</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">Reduce</span><span class="p">(</span><span class="nx">task</span> <span class="nx">WorkerTask</span><span class="p">,</span> <span class="nx">reducef</span> <span class="kd">func</span><span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">bin</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="nx">task</span><span class="p">.</span><span class="nx">Filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="c1">//log.Println(&quot;reading JSON from &quot;, task.Filename)</span>
+        <span class="nx">decoder</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">NewDecoder</span><span class="p">(</span><span class="nx">bin</span><span class="p">)</span>
+        <span class="nx">kvs</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="nx">KeyValue</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">kv</span> <span class="nx">KeyValue</span>
+                <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">decoder</span><span class="p">.</span><span class="nx">Decode</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">kv</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                        <span class="k">break</span>
+                <span class="p">}</span>
+                <span class="nx">kvs</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">kvs</span><span class="p">,</span> <span class="nx">kv</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="c1">//log.Println(&quot;grouping data by key for&quot;, task.Filename)</span>
+        <span class="nx">bykey</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">][]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">kv</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">kvs</span> <span class="p">{</span>
+                <span class="nx">bykey</span><span class="p">[</span><span class="nx">kv</span><span class="p">.</span><span class="nx">Key</span><span class="p">]</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">bykey</span><span class="p">[</span><span class="nx">kv</span><span class="p">.</span><span class="nx">Key</span><span class="p">],</span> <span class="nx">kv</span><span class="p">.</span><span class="nx">Value</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="c1">//log.Println(&quot;running reduce on each key for &quot;, task.Filename)</span>
+        <span class="nx">reduceresults</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="nx">KeyValue</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">vals</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">bykey</span> <span class="p">{</span>
+                <span class="nx">reduced</span> <span class="o">:=</span> <span class="nx">reducef</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">vals</span><span class="p">)</span>
+                <span class="nx">kv</span> <span class="o">:=</span> <span class="nx">KeyValue</span><span class="p">{</span><span class="nx">Key</span><span class="p">:</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">Value</span><span class="p">:</span> <span class="nx">reduced</span><span class="p">}</span>
+                <span class="nx">reduceresults</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">reduceresults</span><span class="p">,</span> <span class="nx">kv</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="nx">sort</span><span class="p">.</span><span class="nx">Sort</span><span class="p">(</span><span class="nx">ByKey</span><span class="p">(</span><span class="nx">reduceresults</span><span class="p">))</span>
+
+        <span class="nx">outputfile</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Create</span><span class="p">(</span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Sprintf</span><span class="p">(</span><span class="s">&quot;mr-out-%d&quot;</span><span class="p">,</span> <span class="nx">task</span><span class="p">.</span><span class="nx">Job</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="c1">//log.Println(&quot;Writing redults to &quot;, outputfile.Name())</span>
+        <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">kv</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">reduceresults</span> <span class="p">{</span>
+                <span class="nx">outputfile</span><span class="p">.</span><span class="nx">WriteString</span><span class="p">(</span>
+                        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Sprintf</span><span class="p">(</span><span class="s">&quot;%v %v\n&quot;</span><span class="p">,</span> <span class="nx">kv</span><span class="p">.</span><span class="nx">Key</span><span class="p">,</span> <span class="nx">kv</span><span class="p">.</span><span class="nx">Value</span><span class="p">))</span>
+        <span class="p">}</span>
+        <span class="k">return</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="the-master-process">
+<h2>The Master Process<a class="headerlink" href="#the-master-process" title="Permalink to this headline">¶</a></h2>
+<p>The important functions for the Master are:</p>
+<dl class="py function">
+<dt id="Master.RequestTask">
+<code class="sig-prename descclassname">Master.</code><code class="sig-name descname">RequestTask</code><span class="sig-paren">(</span><em class="sig-param">args `*workreqest`</em>, <em class="sig-param">reply `*WorkerTask`</em><span class="sig-paren">)</span><a class="headerlink" href="#Master.RequestTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles assignment of jobs</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Master.ConfirmFinish">
+<code class="sig-prename descclassname">Master.</code><code class="sig-name descname">ConfirmFinish</code><span class="sig-paren">(</span><em class="sig-param">mapf func(</em><span class="sig-paren">)</span><a class="headerlink" href="#Master.ConfirmFinish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles completed jobs</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Master.StartReducePhase">
+<code class="sig-prename descclassname">Master.</code><code class="sig-name descname">StartReducePhase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Master.StartReducePhase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates reduce jobs from the intermediate map files</p>
+</dd></dl>
+
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">RequestTask()</span></code> finds the next available task and supplies the
+task information to the Worker</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">RequestTask</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">Master</span><span class="p">)</span> <span class="nx">RequestTask</span><span class="p">(</span><span class="nx">args</span> <span class="o">*</span><span class="nx">WorkRequest</span><span class="p">,</span> <span class="nx">reply</span> <span class="o">*</span><span class="nx">WorkerTask</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+        <span class="nx">m</span><span class="p">.</span><span class="nx">JobMutex</span><span class="p">.</span><span class="nx">Lock</span><span class="p">()</span>
+        <span class="k">defer</span> <span class="nx">m</span><span class="p">.</span><span class="nx">JobMutex</span><span class="p">.</span><span class="nx">Unlock</span><span class="p">()</span>
+        <span class="nx">m</span><span class="p">.</span><span class="nx">FlagMutex</span><span class="p">.</span><span class="nx">Lock</span><span class="p">()</span>
+        <span class="k">defer</span> <span class="nx">m</span><span class="p">.</span><span class="nx">FlagMutex</span><span class="p">.</span><span class="nx">Unlock</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">Jobs</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+                <span class="nx">job</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">m</span><span class="p">.</span><span class="nx">Jobs</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nx">job</span><span class="p">.</span><span class="nx">Assigned</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+                        <span class="nx">reply</span><span class="p">.</span><span class="nx">Filename</span> <span class="p">=</span> <span class="nx">job</span><span class="p">.</span><span class="nx">Filename</span>
+                        <span class="nx">m</span><span class="p">.</span><span class="nx">taskcount</span><span class="o">++</span>
+                        <span class="nx">log</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;assigned job %d, %s to worker %d\n&quot;</span><span class="p">,</span>
+                                <span class="nx">m</span><span class="p">.</span><span class="nx">taskcount</span><span class="p">,</span> <span class="nx">reply</span><span class="p">.</span><span class="nx">Filename</span><span class="p">,</span> <span class="nx">m</span><span class="p">.</span><span class="nx">taskcount</span><span class="p">)</span>
+                        <span class="nx">reply</span><span class="p">.</span><span class="nx">WorkerNumber</span> <span class="p">=</span> <span class="nx">m</span><span class="p">.</span><span class="nx">taskcount</span>
+                        <span class="nx">job</span><span class="p">.</span><span class="nx">Assigned</span> <span class="p">=</span> <span class="nx">m</span><span class="p">.</span><span class="nx">taskcount</span>
+                        <span class="nx">reply</span><span class="p">.</span><span class="nx">NReducers</span> <span class="p">=</span> <span class="nx">m</span><span class="p">.</span><span class="nx">nReducers</span>
+                        <span class="nx">reply</span><span class="p">.</span><span class="nx">Job</span> <span class="p">=</span> <span class="nx">i</span>
+                        <span class="k">if</span> <span class="nx">m</span><span class="p">.</span><span class="nx">Reducing</span> <span class="p">{</span>
+                                <span class="nx">reply</span><span class="p">.</span><span class="nx">Reduce</span> <span class="p">=</span> <span class="kc">true</span>
+                        <span class="p">}</span>
+                        <span class="k">return</span> <span class="kc">nil</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">ConfirmFinish()</span></code> marks the job as done and initiates the
+reduce phase once all the map jobs are finished</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">ConfirmFinish</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">Master</span><span class="p">)</span> <span class="nx">ConfirmFinish</span><span class="p">(</span><span class="nx">args</span> <span class="o">*</span><span class="nx">WorkerTask</span><span class="p">,</span> <span class="nx">reply</span> <span class="o">*</span><span class="nx">CompleteConfirmation</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+        <span class="nx">m</span><span class="p">.</span><span class="nx">JobMutex</span><span class="p">.</span><span class="nx">Lock</span><span class="p">()</span>
+        <span class="k">defer</span> <span class="nx">m</span><span class="p">.</span><span class="nx">JobMutex</span><span class="p">.</span><span class="nx">Unlock</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nx">m</span><span class="p">.</span><span class="nx">Jobs</span><span class="p">[</span><span class="nx">args</span><span class="p">.</span><span class="nx">Job</span><span class="p">].</span><span class="nx">Complete</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nx">errors</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="s">&quot;Job already finished&quot;</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="nx">m</span><span class="p">.</span><span class="nx">Jobs</span><span class="p">[</span><span class="nx">args</span><span class="p">.</span><span class="nx">Job</span><span class="p">].</span><span class="nx">Complete</span> <span class="p">=</span> <span class="kc">true</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;Job: %d completed by %d&quot;</span><span class="p">,</span> <span class="nx">args</span><span class="p">.</span><span class="nx">Job</span><span class="p">,</span> <span class="nx">args</span><span class="p">.</span><span class="nx">WorkerNumber</span><span class="p">)</span>
+
+        <span class="nx">done</span> <span class="o">:=</span> <span class="kc">true</span>
+        <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">job</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">m</span><span class="p">.</span><span class="nx">Jobs</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">!</span><span class="nx">job</span><span class="p">.</span><span class="nx">Complete</span> <span class="p">{</span>
+                        <span class="nx">done</span> <span class="p">=</span> <span class="kc">false</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="nx">done</span> <span class="o">&amp;&amp;</span> <span class="p">!</span><span class="nx">m</span><span class="p">.</span><span class="nx">Reducing</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">Jobs</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+                        <span class="nx">m</span><span class="p">.</span><span class="nx">WriteToBuckets</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+                <span class="p">}</span>
+                <span class="nx">m</span><span class="p">.</span><span class="nx">StartReducePhase</span><span class="p">()</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">StartReducePhase()</span></code> creates the reduce jobs so their ready to be
+assigned by <code class="xref py py-func docutils literal notranslate"><span class="pre">RequestTask()</span></code></p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">StartReducePhase</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">Master</span><span class="p">)</span> <span class="nx">StartReducePhase</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">m</span><span class="p">.</span><span class="nx">FlagMutex</span><span class="p">.</span><span class="nx">Lock</span><span class="p">()</span>
+        <span class="nx">m</span><span class="p">.</span><span class="nx">Reducing</span> <span class="p">=</span> <span class="kc">true</span>
+        <span class="nx">m</span><span class="p">.</span><span class="nx">FlagMutex</span><span class="p">.</span><span class="nx">Unlock</span><span class="p">()</span>
+
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Renaming temp files and creating reduce tasks&quot;</span><span class="p">)</span>
+
+        <span class="nx">m</span><span class="p">.</span><span class="nx">Jobs</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="nx">JobInfo</span><span class="p">,</span> <span class="nx">m</span><span class="p">.</span><span class="nx">nReducers</span><span class="p">)</span>
+        <span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">f</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">m</span><span class="p">.</span><span class="nx">ReduceBuckets</span> <span class="p">{</span>
+                <span class="nx">newname</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Sprintf</span><span class="p">(</span><span class="s">&quot;mr_%d&quot;</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span>
+                <span class="nx">os</span><span class="p">.</span><span class="nx">Rename</span><span class="p">(</span><span class="nx">f</span><span class="p">.</span><span class="nx">Name</span><span class="p">(),</span> <span class="nx">newname</span><span class="p">)</span>
+                <span class="nx">f</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+                <span class="nx">m</span><span class="p">.</span><span class="nx">Jobs</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">JobInfo</span><span class="p">{</span>
+                        <span class="nx">Filename</span><span class="p">:</span> <span class="nx">newname</span><span class="p">,</span>
+                        <span class="nx">Reducing</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="p">}</span>
+                <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;added job &quot;</span><span class="p">,</span> <span class="nx">m</span><span class="p">.</span><span class="nx">Jobs</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>The rest of the system is implemented in the provided template code</p>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="dev-log">
+<h2>Dev Log<a class="headerlink" href="#dev-log" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Initialized Master with 2 Maps. One to keep track of which files are currently being mapped and
+another to keep track of which files have been successfully mapped</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Likley will need to use a Mutex for the Maps as Go maps are not threadsafe</p>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Created a rpc <code class="xref py py-func docutils literal notranslate"><span class="pre">RequestTask()</span></code> which workers can call to receive a filename &amp; a boolean indicating
+whether to act as a mapper or a reducer</p></li>
+<li><p>Implemented the Mapping functionallity in the worker
+- Logged Json serialization of each KeyValue returned from mapf in a TempFile
+- Rename temp file once all KeyValues have been properly written</p></li>
+</ol>
+<dl class="field-list">
+<dt class="field-odd">End of Lab</dt>
+<dd class="field-odd"><p>Had some problems with the go import/build system which took up about 1/2 hour of the lab.
+Otherwise I’m happy with the progress</p>
+</dd>
+<dt class="field-even">Next Steps</dt>
+<dd class="field-even"><ol class="arabic simple">
+<li><p>When the code in invoked from the test script the temp files cannot be found properly.
+using absolute paths will probably fix this</p>
+<ul class="simple">
+<li><p>FIXED: needed to remove “../” from the filename received from master</p></li>
+</ul>
+</li>
+</ol>
+<ol class="arabic simple" start="3">
+<li><p>The shared map will probably cause race conditions. Atleast wrap the access in
+a function so it’ll be easy to fix this later</p>
+<ul class="simple">
+<li><p>FIXED: Added a Mutex to the Master struct for this purpose</p></li>
+</ul>
+</li>
+<li><p>Create an RPC for workers to call when whey have finished.
+This RPC can then handle determining if we are Done or not,
+once mapping is done <code class="xref py py-func docutils literal notranslate"><span class="pre">RequestTask()</span></code> can start handing outreduce tasks</p>
+<ul class="simple">
+<li><p>FIXED: Added an RPC for the worker to call when they finish</p></li>
+<li><p>The Files map is updated so the main RPC will know when
+to start handing out Reduce Tasks</p></li>
+</ul>
+</li>
+</ol>
+<ol class="arabic simple" start="6">
+<li><p>Create an id/numbering system for the workers, You will need this to make sure the same
+file is not mapped twice (if a worker finishes after the timeout we will need to tell
+the difference between it and the newly dispatched worker)</p>
+<ul class="simple">
+<li><p>DONE</p></li>
+</ul>
+</li>
+</ol>
+<ol class="arabic simple" start="5">
+<li><p>Create and start a GoRoutine to keep track of how long
+workers have been running and free the filenames to be given
+out again by <code class="xref py py-func docutils literal notranslate"><span class="pre">RequestTask()</span></code> when the workers take to long (10s)</p>
+<ul class="simple">
+<li><p>DONE: Was able to use the Done() routine which is already called
+every second</p></li>
+</ul>
+</li>
+<li><p>Assign Reduce tasks after the Map tasks have completed</p>
+<ul class="simple">
+<li><p>DONE: The list of input files is split evenly umong the
+available workers and provided on the next request to
+<code class="xref py py-func docutils literal notranslate"><span class="pre">RequestTask()</span></code></p></li>
+</ul>
+</li>
+</ol>
+</dd>
+<dt class="field-odd">TODO</dt>
+<dd class="field-odd"><p>Assign Reduce Tasks</p>
+<ul class="simple">
+<li><p>DONE:</p></li>
+</ul>
+</dd>
+<dt class="field-even">TODO</dt>
+<dd class="field-even"><p>Put loop in workers to continually request tasks</p>
+<ul class="simple">
+<li><p>DONE:</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Bug</dt>
+<dd class="field-odd"><p>Test hangs after first 3 maps</p>
+<ul class="simple">
+<li><p>Nevermind, not a bug. The test only runs
+3 workers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Bug</dt>
+<dd class="field-even"><p>Tests pass with 2 workers but not with 3. Reduce buckets are being written to after
+the reduce tasks have been started</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>FIXED: Tasks were being marked complete when the started processing</dt><dd><p>not after finishing</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt class="field-odd">Issue</dt>
+<dd class="field-odd"><p>Producing the reduce files from each of the worker threads output files is
+really slow</p>
+</dd>
+<dt class="field-even">Note</dt>
+<dd class="field-even"><p>I had to move the bin sorting to the end of the map phase before the reduce phase.
+It seems the order that these are done is important but I don’t understand why. A Mutex
+is used so there should not be any concurrency issues</p>
+</dd>
+<dt class="field-odd">Bug</dt>
+<dd class="field-odd"><p>Hangs on crash.go. It gets to the reduce tasks fine but eventually
+tasks stop being handed out without the code finishing.
+The Done function checks that all tasks are finished and then returns true,
+so it should not be possible for the code to hang unless there are still some tasks
+not marked as complete. Perhaps tasks are not being re-assigned properly
+when a reducer fails mid shift</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>FIXED: I was looping over the jobs using range. So when the assigned &amp; complete variables were
+changed in the loop it was a copy that was changed and not the real value. By getting the
+correct address of each job and using that the issue was fixed</p></li>
+</ul>
+</div></blockquote>
+</dd>
+<dt class="field-even">DONE</dt>
+<dd class="field-even"><p>All tests passing as of May 24th 2020. Also tested with up to 6 worker processes</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../grpc/grpc.html" class="btn btn-neutral float-left" title="Diggind in to the gRPC example code" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Blake Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

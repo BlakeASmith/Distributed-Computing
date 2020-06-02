@@ -1,0 +1,610 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CSC Lab 3: Analysis of Map-Reduce Performance &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="Lab 2: A Simplified Distributed Map Reduce" href="../lab2.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Distributied Computing Summer 2020
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../google_article.html">Google Article on Distributed Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../aws_beyondelevennines_talk.html">Noes from AWS Beyond Eleven Nines Talk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../clock_exercise/clock_exercise.html">Clock Exercise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../week2.html">Semantics of RPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../grpc/grpc.html">Diggind in to the gRPC example code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lab2.html">Lab 2: A Simplified Distributed Map Reduce</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CSC Lab 3: Analysis of Map-Reduce Performance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sequential-map-reduce-a-baseline">Sequential Map Reduce, A Baseline</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-phases-of-map-reduce-in-the-sequential-case">The Phases of Map Reduce (In the Sequential Case)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#collecting-stats-for-mrsequential-go">Collecting Stats for <cite>mrsequential.go</cite></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#script-to-run-various-senarios">Script to Run Various Senarios</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#distributed-map-reduce">Distributed Map Reduce</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#phases-lifecycle">Phases / LifeCycle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tracking-the-stats-for-each-task">Tracking the Stats for Each Task</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tracking-stats-on-the-master">Tracking Stats on The Master</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#running-scenarios-collecting-the-data">Running Scenarios &amp; Collecting the Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interpreting-results">Interpreting Results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#average-worst-best-runtime-by-number-of-workers-and-input-size">Average, Worst, &amp; Best Runtime by Number of Workers and Input Size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#average-worst-best-case-space-used-by-number-of-workers-and-input-size">Average, Worst, &amp; Best Case Space used by Number of Workers and Input Size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#average-worst-best-case-runtime-per-byte-of-input">Average, Worst, &amp; Best Case Runtime Per Byte of Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#computational-complexity">Computational Complexity</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#in-the-sequential-case">In the Sequential Case</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scripts">Scripts</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Distributied Computing Summer 2020</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>CSC Lab 3: Analysis of Map-Reduce Performance</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/labs/lab3/lab3report.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="csc-lab-3-analysis-of-map-reduce-performance">
+<h1>CSC Lab 3: Analysis of Map-Reduce Performance<a class="headerlink" href="#csc-lab-3-analysis-of-map-reduce-performance" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="sequential-map-reduce-a-baseline">
+<h2>Sequential Map Reduce, A Baseline<a class="headerlink" href="#sequential-map-reduce-a-baseline" title="Permalink to this headline">¶</a></h2>
+<p>Before proceeding with testing my implementation from Lab 2
+I will first gather some metrics from
+the sequential implementation given in <cite>mrseqential.go</cite>.
+This baseline will be used to determine at what point the
+multi-process implementation becomes worthwhile and what
+the trade offs are in regards to space &amp; time complexity.</p>
+<div class="section" id="the-phases-of-map-reduce-in-the-sequential-case">
+<h3>The Phases of Map Reduce (In the Sequential Case)<a class="headerlink" href="#the-phases-of-map-reduce-in-the-sequential-case" title="Permalink to this headline">¶</a></h3>
+<p>In order to estimate the performance of a sequential map-reduce
+I will be collecting the following information at each step
+in the execution.</p>
+<ol class="arabic">
+<li><p>Read input files and pass into the map function, producing
+a collection of intermediate values.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Time taken to read in the input files and produce
+the intermediate collection.</p></li>
+<li><p>Space required to store the intermediate values</p></li>
+<li><p>Time taken to sort the intermediate values</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Run Reduce on each key and create a single output file</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Time taken to complete all reduce jobs and produce
+the full output</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</div>
+<div class="section" id="collecting-stats-for-mrsequential-go">
+<h3>Collecting Stats for <cite>mrsequential.go</cite><a class="headerlink" href="#collecting-stats-for-mrsequential-go" title="Permalink to this headline">¶</a></h3>
+<p>First I created a struct to keep all of the statistics.</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">Stats</span> <span class="kd">struct</span> <span class="p">{</span>
+        <span class="c1">// total execution time</span>
+        <span class="nx">TotalTime</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span>
+        <span class="c1">// time to produce intermedates</span>
+        <span class="nx">MapSeqenceTime</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span>
+        <span class="c1">// (in-memory) space required to store intermediates (in bytes)</span>
+        <span class="nx">IntermediateSpace</span> <span class="kt">int</span>
+        <span class="c1">// time to sort the intermediates</span>
+        <span class="nx">SortTime</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span>
+        <span class="c1">// runtime of reduce jobs, including storage of the results</span>
+        <span class="nx">ReduceSequenceTime</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span>
+        <span class="c1">// number of bytes from all the keys (including duplicates)</span>
+        <span class="nx">NumKeyBytes</span> <span class="kt">int</span>
+        <span class="c1">// number of bytes from all the values</span>
+        <span class="nx">NumValBytes</span> <span class="kt">int</span>
+        <span class="c1">// number of KV pairs processed</span>
+        <span class="nx">NumRecords</span> <span class="kt">int</span>
+        <span class="c1">// number of keys after grouping (number of calls to reduce</span>
+        <span class="nx">NumKeys</span> <span class="kt">int</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>After collecting the data I simply output the <em>JSON</em> encoding of the struct to <em>stdout</em>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+        <span class="s2">&quot;TotalTime&quot;</span><span class="p">:</span><span class="mi">703120545</span><span class="p">,</span>
+        <span class="s2">&quot;MapSeqenceTime&quot;</span><span class="p">:</span><span class="mi">371379906</span><span class="p">,</span>
+        <span class="s2">&quot;IntermediateSpace&quot;</span><span class="p">:</span><span class="mi">3150705</span><span class="p">,</span>
+        <span class="s2">&quot;SortTime&quot;</span><span class="p">:</span><span class="mi">194342963</span><span class="p">,</span>
+        <span class="s2">&quot;ReduceSequenceTime&quot;</span><span class="p">:</span><span class="mi">127343518</span><span class="p">,</span>
+        <span class="s2">&quot;NumKeyBytes&quot;</span><span class="p">:</span><span class="mi">2526757</span><span class="p">,</span>
+        <span class="s2">&quot;NumValBytes&quot;</span><span class="p">:</span><span class="mi">623948</span><span class="p">,</span>
+        <span class="s2">&quot;NumRecords&quot;</span><span class="p">:</span><span class="mi">623948</span><span class="p">,</span>
+        <span class="s2">&quot;NumKeys&quot;</span><span class="p">:</span><span class="mi">22107</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="script-to-run-various-senarios">
+<h4>Script to Run Various Senarios<a class="headerlink" href="#script-to-run-various-senarios" title="Permalink to this headline">¶</a></h4>
+<p>Next I wrote a <em>Python</em> script to run various scenarios and serialize the results to be analyzed later.
+This script will run mrseqential.go on different numbers of input files and store the results for each
+case in a <em>.json</em> file</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">textfiles</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;pg-*&#39;</span><span class="p">))</span>
+<span class="n">of</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sequential_stats.json&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">txt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">textfiles</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+    <span class="n">running</span> <span class="o">=</span> <span class="n">textfiles</span><span class="p">[:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;running mrsequential.go with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">running</span><span class="p">)</span><span class="si">}</span><span class="s2"> files&quot;</span><span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;go run ./mrsequential.go wc.so &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">running</span><span class="p">])</span>
+    <span class="n">stream</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+    <span class="n">_json</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;seq_</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">running</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">jsonstr</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_json</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">of</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">jsonstr</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>From the following figure you can see that the runtime scales linearly with the input size as expected.</p>
+<div class="figure align-default">
+<img alt="../../_images/seq_time_perf.png" src="../../_images/seq_time_perf.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="distributed-map-reduce">
+<h2>Distributed Map Reduce<a class="headerlink" href="#distributed-map-reduce" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="phases-lifecycle">
+<h3>Phases / LifeCycle<a class="headerlink" href="#phases-lifecycle" title="Permalink to this headline">¶</a></h3>
+<p>My implementation of Distributed Map Reduce is structured as follows:</p>
+<ol class="arabic simple">
+<li><p>The Master prepares a list of structs for each of the Map jobs, keeping track
+of which jobs are assigned and which are finished.</p></li>
+<li><p>Workers request jobs from the master and are assigned the first job which
+is still marked unassigned.</p></li>
+<li><p>Workers inform the Master once they have finished their job and are then assigned
+another job if one is avalable. If there are no jobs available the Worker is either
+told to wait or to quit.</p></li>
+<li><p>Once all Map jobs are marked as finished, the master separates the
+results into N reduce buckets and creates a reduce job for each.</p></li>
+<li><p>Workers continue to request jobs and inform on completion until
+all reduce jobs are marked finished</p></li>
+<li><p>When all Jobs are finished any Worker requesting a job is told to quit</p></li>
+<li><p>On the first call to the timing routine (Done()), after all reduce jobs
+are marked complete, a value of <em>true</em> is returned causing the Master
+to Exit</p></li>
+<li><p>Any remaining Workers exit as they are not able to conact the Master</p></li>
+</ol>
+</div>
+<div class="section" id="tracking-the-stats-for-each-task">
+<h3>Tracking the Stats for Each Task<a class="headerlink" href="#tracking-the-stats-for-each-task" title="Permalink to this headline">¶</a></h3>
+<p>In the Worker the following is recorded for each Task/Job:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">TaskStat</span> <span class="kd">struct</span> <span class="p">{</span>
+        <span class="c1">// ID for the job</span>
+        <span class="nx">JobNumber</span>  <span class="kt">int</span>
+        <span class="c1">// ID for the specific instance of attempting the job</span>
+        <span class="nx">TaskID</span>     <span class="kt">int</span>
+        <span class="c1">// Flag to indicate if it&#39;s a map or a reduce</span>
+        <span class="nx">Reduce</span>     <span class="kt">bool</span>
+        <span class="c1">// runtime of the job</span>
+        <span class="c1">//(between receiving the job and informing the master of completion)</span>
+        <span class="nx">Time</span>       <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span>
+        <span class="c1">// Amount of  space used to store intermedates</span>
+        <span class="nx">Space</span>      <span class="kt">int</span>
+        <span class="c1">// Number of unique keys processed</span>
+        <span class="nx">UniqueKeys</span> <span class="kt">int</span>
+        <span class="c1">// Total number of records processed</span>
+        <span class="nx">Records</span>    <span class="kt">int</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tracking-stats-on-the-master">
+<h3>Tracking Stats on The Master<a class="headerlink" href="#tracking-stats-on-the-master" title="Permalink to this headline">¶</a></h3>
+<p>In the Master the following stats are recorded.</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">Stat</span> <span class="kd">struct</span> <span class="p">{</span>
+        <span class="c1">// Time between starting the master and returning *true* from Done()</span>
+        <span class="nx">TotalTime</span>                   <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span>
+        <span class="c1">// Time when the Master started</span>
+        <span class="nx">StartTime</span>                   <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
+        <span class="c1">// Time when the Master finishes</span>
+        <span class="nx">EndTime</span>                     <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
+        <span class="c1">// Duration of the Map phase</span>
+        <span class="nx">MapSequenceTime</span>             <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span>
+        <span class="c1">// Duration of the Reduce phase</span>
+        <span class="nx">ReduceSequenceTime</span>          <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span>
+        <span class="c1">// List of the stats for every completed Job</span>
+        <span class="nx">StatsPerJob</span>                 <span class="p">[]</span><span class="nx">TaskStat</span>
+        <span class="c1">// Time taken to partition the results from map</span>
+        <span class="c1">// into buckets for Reduce tasks</span>
+        <span class="nx">PartitioningTime</span>            <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span>
+        <span class="c1">// duration of parttioning for each intermediate Map file</span>
+        <span class="nx">PartitioningTimePerMap</span>      <span class="p">[]</span><span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span>
+        <span class="c1">// Memory space used while partitioning</span>
+        <span class="nx">PartitioningSpace</span>           <span class="p">[]</span><span class="kt">int</span>
+        <span class="c1">// Total disk space used for intermediate files produced in the Map phase</span>
+        <span class="nx">IntermedateHDSpaceForMap</span>    <span class="kt">int</span>
+        <span class="c1">// Total disk space used for intermediate files produced in the Reduce phase</span>
+        <span class="nx">IntermedateHDSpaceForReduce</span> <span class="kt">int</span>
+        <span class="nx">NumberOfReduceJobs</span>          <span class="kt">int</span>
+        <span class="nx">NumberOfMapJobs</span>             <span class="kt">int</span>
+        <span class="c1">// Total number of unique keys processed</span>
+        <span class="nx">NumberOfUniqueKeys</span>          <span class="kt">int</span>
+        <span class="c1">// Total number of records processed</span>
+        <span class="nx">NumberOfRecords</span>             <span class="kt">int</span>
+        <span class="c1">// Total number of bytes across all input files</span>
+        <span class="nx">InputBytes</span>                  <span class="kt">int</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="running-scenarios-collecting-the-data">
+<h2>Running Scenarios &amp; Collecting the Data<a class="headerlink" href="#running-scenarios-collecting-the-data" title="Permalink to this headline">¶</a></h2>
+<p>I used <em>Python</em> to run the test scenarios, as well as to
+interpret the results (see the <a class="reference internal" href="#scripts">Scripts</a> section).</p>
+<p>The script runs the wc.go plugin using one, two, three, …, and 8 Worker process on all variations of input.
+(with 1 file, 2 files, 3 files, …, 8 files). Thus a total of 64 scenarios are run.</p>
+<p>Those 64 scenarios are repeated 20 times in order to calculate a good average value.</p>
+<p>Results from each scenario are appended to a file <em>stat.json</em></p>
+<p>Once the script finishes the results are found in a file <em>stat.stat</em>.</p>
+</div>
+<div class="section" id="interpreting-results">
+<h2>Interpreting Results<a class="headerlink" href="#interpreting-results" title="Permalink to this headline">¶</a></h2>
+<p>Another <em>Python</em> script pulls the data produced from the
+tests and computes various statistics (see <a class="reference internal" href="#scripts">Scripts</a>).</p>
+<p>The script generates the following tables (as <em>csv files</em>) and figures.</p>
+<div class="section" id="average-worst-best-runtime-by-number-of-workers-and-input-size">
+<h3>Average, Worst, &amp; Best Runtime by Number of Workers and Input Size<a class="headerlink" href="#average-worst-best-runtime-by-number-of-workers-and-input-size" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="average-worst-best-case-space-used-by-number-of-workers-and-input-size">
+<h3>Average, Worst, &amp; Best Case Space used by Number of Workers and Input Size<a class="headerlink" href="#average-worst-best-case-space-used-by-number-of-workers-and-input-size" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="average-worst-best-case-runtime-per-byte-of-input">
+<h3>Average, Worst, &amp; Best Case Runtime Per Byte of Input<a class="headerlink" href="#average-worst-best-case-runtime-per-byte-of-input" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="computational-complexity">
+<h3>Computational Complexity<a class="headerlink" href="#computational-complexity" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="in-the-sequential-case">
+<h4>In the Sequential Case<a class="headerlink" href="#in-the-sequential-case" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><p>Let <strong>n</strong> be the number of <strong>keys</strong></p></li>
+<li><p>let <strong>m</strong> be the number of <strong>values</strong></p></li>
+</ul>
+<dl class="field-list">
+<dt class="field-odd">Single Map Job</dt>
+<dd class="field-odd"><p>The <a class="reference internal" href="../lab2.html#Map" title="Map"><code class="xref py py-func docutils literal notranslate"><span class="pre">Map()</span></code></a> operation involves the following procedures:</p>
+<ol class="arabic">
+<li><p>Call to <code class="xref py py-func docutils literal notranslate"><span class="pre">mapf()</span></code> provided by plugin</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>Usually O(m) but depends on the specific implementation</dt><dd><ul>
+<li><p>The transformation is performed once per value in the input</p></li>
+<li><p>for the purposes of this analysis I will assume O(m)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Encoding and storage of results from <code class="xref py py-func docutils literal notranslate"><span class="pre">mapf()</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Also O(m) as the number of key-value pairs to encode is the same as the
+in the input to <code class="xref py py-func docutils literal notranslate"><span class="pre">mapf()</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</dd>
+<dt class="field-even">Single Reduce Job</dt>
+<dd class="field-even"><p>The <a class="reference internal" href="../lab2.html#Reduce" title="Reduce"><code class="xref py py-func docutils literal notranslate"><span class="pre">Reduce()</span></code></a> operation involves the following:</p>
+<ol class="arabic">
+<li><p>Decoding JSON data from intermediate file</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>this is a linear operation (O(m)) as there is one
+entry in the file for every value.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Group values by key</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>We do this by iterating over the values and
+adding them to the appropriate list using a map</p></li>
+<li><p>This is O(m) as well</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Call to <code class="xref py py-func docutils literal notranslate"><span class="pre">reducef()</span></code> provided by plugin for each key</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">reducef()</span></code> is called for each key and Its complexity will
+depend on the number of values which have that key.</p></li>
+<li><p>Calling <code class="xref py py-func docutils literal notranslate"><span class="pre">reducef()</span></code> for every Key will, in effect, consider
+every value once. Meaning a collective O(m) runtime for the <code class="xref py py-func docutils literal notranslate"><span class="pre">reducef()</span></code> calls.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Sorting the reduced values and logging in an output file</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the sort implementation used is <span class="math notranslate nohighlight">\(O(nlogn)\)</span></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</dd>
+<dt class="field-odd">Partitioning Data into Reduce Buckets</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" id="scripts">
+<h2>Scripts<a class="headerlink" href="#scripts" title="Permalink to this headline">¶</a></h2>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">testscript.py</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Parse data produced for CSC462 Lab 3&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">NUMBER_OF_INPUT_SETS</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">NUMBER_OF_WORKER_SCENARIOS</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">NUMBER_OF_RUNS</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="k">def</span> <span class="nf">stats</span><span class="p">():</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;stats.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+<span class="n">_stats</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">stats</span><span class="p">())</span>
+
+<span class="n">stats_per_input_set</span> <span class="o">=</span> <span class="p">[</span><span class="n">_stats</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">NUMBER_OF_INPUT_SETS</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> 
+                       <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">_stats</span><span class="p">),</span> <span class="n">NUMBER_OF_INPUT_SETS</span><span class="p">)]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stats_per_input_set</span><span class="p">))</span>
+
+<span class="n">stats_sets_per_worker_senarios</span> <span class="o">=</span> <span class="p">[</span><span class="n">stats_per_input_set</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">NUMBER_OF_WORKER_SCENARIOS</span><span class="p">]</span>
+                                  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats_per_input_set</span><span class="p">),</span> 
+                                      <span class="n">NUMBER_OF_WORKER_SCENARIOS</span><span class="p">)]</span>
+
+<span class="n">bysenarios</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUMBER_OF_WORKER_SCENARIOS</span><span class="p">)]</span>
+<span class="k">for</span> <span class="n">workersenarios</span> <span class="ow">in</span> <span class="n">stats_sets_per_worker_senarios</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">lst</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">bysenarios</span><span class="p">):</span>
+        <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">workersenarios</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    
+<span class="nb">print</span><span class="p">(</span><span class="n">bysenarios</span><span class="p">)</span>
+
+
+
+
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">testscript.py</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Parse data produced for CSC462 Lab 3&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">NUMBER_OF_INPUT_SETS</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">NUMBER_OF_WORKER_SCENARIOS</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">NUMBER_OF_RUNS</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="k">def</span> <span class="nf">stats</span><span class="p">():</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;stats.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+<span class="n">_stats</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">stats</span><span class="p">())</span>
+
+<span class="n">stats_per_input_set</span> <span class="o">=</span> <span class="p">[</span><span class="n">_stats</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">NUMBER_OF_INPUT_SETS</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> 
+                       <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">_stats</span><span class="p">),</span> <span class="n">NUMBER_OF_INPUT_SETS</span><span class="p">)]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stats_per_input_set</span><span class="p">))</span>
+
+<span class="n">stats_sets_per_worker_senarios</span> <span class="o">=</span> <span class="p">[</span><span class="n">stats_per_input_set</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">NUMBER_OF_WORKER_SCENARIOS</span><span class="p">]</span>
+                                  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats_per_input_set</span><span class="p">),</span> 
+                                      <span class="n">NUMBER_OF_WORKER_SCENARIOS</span><span class="p">)]</span>
+
+<span class="n">bysenarios</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUMBER_OF_WORKER_SCENARIOS</span><span class="p">)]</span>
+<span class="k">for</span> <span class="n">workersenarios</span> <span class="ow">in</span> <span class="n">stats_sets_per_worker_senarios</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">lst</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">bysenarios</span><span class="p">):</span>
+        <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">workersenarios</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    
+<span class="nb">print</span><span class="p">(</span><span class="n">bysenarios</span><span class="p">)</span>
+
+
+
+
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../lab2.html" class="btn btn-neutral float-left" title="Lab 2: A Simplified Distributed Map Reduce" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Blake Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

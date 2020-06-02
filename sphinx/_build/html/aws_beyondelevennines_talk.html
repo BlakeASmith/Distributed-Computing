@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Noes from AWS Beyond Eleven Nines Talk &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Clock Exercise" href="clock_exercise/clock_exercise.html" />
+    <link rel="prev" title="Google Article on Distributed Systems" href="google_article.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Distributied Computing Summer 2020
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="google_article.html">Google Article on Distributed Systems</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Noes from AWS Beyond Eleven Nines Talk</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lessons-from-security">Lessons from security</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#common-threats">Common Threats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#byo-threat-models">BYO Threat Models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="clock_exercise/clock_exercise.html">Clock Exercise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week2.html">Semantics of RPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grpc/grpc.html">Diggind in to the gRPC example code</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Distributied Computing Summer 2020</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Noes from AWS Beyond Eleven Nines Talk</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/aws_beyondelevennines_talk.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="noes-from-aws-beyond-eleven-nines-talk">
+<h1>Noes from AWS Beyond Eleven Nines Talk<a class="headerlink" href="#noes-from-aws-beyond-eleven-nines-talk" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">see full talk here</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://www.youtube.com/watch?time_continue=582&amp;v=DzRyrvUF-C0&amp;feature=emb_logo">https://www.youtube.com/watch?time_continue=582&amp;v=DzRyrvUF-C0&amp;feature=emb_logo</a></p>
+</dd>
+</dl>
+<ul class="simple">
+<li><p>trillions of objects, needed to scale over the years</p></li>
+</ul>
+<div class="section" id="lessons-from-security">
+<h2>Lessons from security<a class="headerlink" href="#lessons-from-security" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">Threat Model</dt>
+<dd class="field-odd"><p>Get really specific about what a threat is</p>
+</dd>
+<dt class="field-even">Q</dt>
+<dd class="field-even"><p>Who is the attacker?, what can they do?, what are they trying to do to us?</p>
+</dd>
+<dt class="field-odd">A</dt>
+<dd class="field-odd"><ol class="arabic simple">
+<li><p>Pick a specific risk (eg. account hacking)</p></li>
+<li><p>What could they do (eg. password guessing)</p></li>
+<li><p>What are they tring to do (eg. steal accounts to send spam)</p></li>
+</ol>
+</dd>
+<dt class="field-even">next</dt>
+<dd class="field-even"><p>move to pros, answer the questions in detail</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Implement Mechanisms</dt><dd><ul class="simple">
+<li><p>Ongoing</p></li>
+<li><p>Technical and organizational approaches</p></li>
+</ul>
+</dd>
+</dl>
+<p>Attacker could be failiure, decay, does not need to be someone</p>
+</div>
+<div class="section" id="common-threats">
+<h2>Common Threats<a class="headerlink" href="#common-threats" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">problem</dt>
+<dd class="field-odd"><p>Facility Failiure
+* any single facility can fail at any time</p>
+</dd>
+<dt class="field-even">solution</dt>
+<dd class="field-even"><p>availability zones, hazard analysis
+-&gt; Buildings that won’t fail together</p>
+</dd>
+<dt class="field-odd">quote</dt>
+<dd class="field-odd"><p>writing is natures way of showing you how sloppy your thinking is</p>
+</dd>
+<dt class="field-even">problem</dt>
+<dd class="field-even"><p>Hardware Failiure</p>
+</dd>
+</dl>
+<p>worry about the worst exposed componants, not the averages</p>
+<dl class="field-list simple">
+<dt class="field-odd">quote</dt>
+<dd class="field-odd"><p>you are only as good as you are able to measure yourself</p>
+</dd>
+<dt class="field-even">problem</dt>
+<dd class="field-even"><p>Data corruption</p>
+</dd>
+</dl>
+<p>myths:
+* TCP checksums got be covered
+* CPU won’t lie to me
+* Data coruption is a hardware problem
+* Corruption is always a single bit flip</p>
+<dl class="field-list simple">
+<dt class="field-odd">problem</dt>
+<dd class="field-odd"><p>Bugs</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><p>code level bugs</p></li>
+<li><p>design level bugs</p></li>
+</ul>
+<p>zonal delpoys
+`</p>
+</div>
+<div class="section" id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="byo-threat-models">
+<h2>BYO Threat Models<a class="headerlink" href="#byo-threat-models" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="clock_exercise/clock_exercise.html" class="btn btn-neutral float-right" title="Clock Exercise" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="google_article.html" class="btn btn-neutral float-left" title="Google Article on Distributed Systems" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Blake Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

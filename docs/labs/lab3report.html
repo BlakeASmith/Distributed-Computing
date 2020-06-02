@@ -1,0 +1,260 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CSC 462 Lab #3. Complexity Analysis of Map Reduce &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Lab 2: A Simplified Distributed Map Reduce" href="lab2.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Distributied Computing Summer 2020
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../google_article.html">Google Article on Distributed Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../aws_beyondelevennines_talk.html">Noes from AWS Beyond Eleven Nines Talk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clock_exercise/clock_exercise.html">Clock Exercise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../week2.html">Semantics of RPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../grpc/grpc.html">Diggind in to the gRPC example code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab2.html">Lab 2: A Simplified Distributed Map Reduce</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CSC 462 Lab #3. Complexity Analysis of Map Reduce</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sequential-map-reduce-a-baseline">Sequential Map Reduce, A Baseline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-phases-of-map-reduce-in-the-sequential-case">The Phases of Map Reduce (In the Sequential Case)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modifications-to-mrsequential-go">Modifications to <cite>mrsequential.go</cite></a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Distributied Computing Summer 2020</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>CSC 462 Lab #3. Complexity Analysis of Map Reduce</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/labs/lab3report.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="csc-462-lab-3-complexity-analysis-of-map-reduce">
+<h1>CSC 462 Lab #3. Complexity Analysis of Map Reduce<a class="headerlink" href="#csc-462-lab-3-complexity-analysis-of-map-reduce" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="sequential-map-reduce-a-baseline">
+<h2>Sequential Map Reduce, A Baseline<a class="headerlink" href="#sequential-map-reduce-a-baseline" title="Permalink to this headline">¶</a></h2>
+<p>Before proceeding with testing my implementation from Lab 2
+I will first gather some metrics from
+the sequential implementation given in <cite>mrseqential.go</cite>.
+This baseline will be used to determine at what point the
+multi-process implementation becomes worthwhile and what
+the trade offs are in regards to space &amp; time complexity.</p>
+</div>
+<div class="section" id="the-phases-of-map-reduce-in-the-sequential-case">
+<h2>The Phases of Map Reduce (In the Sequential Case)<a class="headerlink" href="#the-phases-of-map-reduce-in-the-sequential-case" title="Permalink to this headline">¶</a></h2>
+<p>In order to estimate the performance of a sequential map-reduce
+I will be collecting the following information at each step
+in the execution.</p>
+<ol class="arabic">
+<li><p>Read input files and pass into the map function, producing
+a collection of intermediate values.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Time taken to read in the input files and produce
+the intermediate collection.</p></li>
+<li><p>Space required to store the intermediate values</p></li>
+<li><p>Time taken to sort the intermediate values</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Group the intermediate values by key, producing a list of
+values for every key.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Time taken to group the values by key</p></li>
+<li><p>Amount of memory used in that process</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Run Reduce on each key and create a single output file</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Time taken to complete all reduce jobs and produce
+the full output</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</div>
+<div class="section" id="modifications-to-mrsequential-go">
+<h2>Modifications to <cite>mrsequential.go</cite><a class="headerlink" href="#modifications-to-mrsequential-go" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="lab2.html" class="btn btn-neutral float-left" title="Lab 2: A Simplified Distributed Map Reduce" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Blake Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

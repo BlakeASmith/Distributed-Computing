@@ -1,0 +1,123 @@
+Semantics of RPC
+========================================================
+
+Upper Bound
+----------------------------
+
+:upper bound on latency?: 
+        shared bandwidth, busy routers, async communication
+
+:Question: How long do you wait before timeout?
+
+* it's difficult to determine if server is alive or dead
+        * could be a bug in the router or something else unexpected   
+        * Independant failiure is a real struggle
+* we need to engineer the system to always be able to make forward progress
+
+Multi Core system vs Distributed System
+--------------------------------------------------------
+#DONE: Multi X video 16/05/20 01:26PM
+
+Multi core computers are not real distributed system
+
+* not as much failiure potential as a DS
+* core failiure can happen, but is much less likley
+* failiures of one core tend to lead to catestrophic failiures
+        * so it's hard not to notice the failiures
+
+LPC vs RPC semantics
+----------------------------
+#DONE: LPC vs RPC video 16/05/20 01:35PM
+
+:LPC: it works or it doesn't
+
+        - occurs exactly once 
+
+:RPC: it might have worked? it might have not?
+
+        - impossible to guarentee "exactly once" execution
+                - server could go down
+                - race conditions
+        - "at most once" is the best we can do
+        - lots of stuff in between that can go wrong
+        - It's hard to tell and can lead to some really bad side effects!
+
+        
+Transperancy in DS
+----------------------------
+#DONE: Transperancy Video 16/05/20 01:39PM
+
+The idea of RPC is nice since, if it acts like a LPC, it is
+easy to use and reason about. However there is a trade off 
+between that ease of use (similarity to LPC) and Transperancy
+(How much you get to know about that the DS is doing)
+
+A total lack of transperancy means a seemingly easy to use function that
+looks like an LPC. But if something is going wrong in the DS (network errors, 
+downed server, slow server, etc.) it will be harder to sus out
+
+How much control do you give to the user of the RPC?
+How do you name the RPC? What about binding?
+
+
+gRPC a open source RPC Library
+----------------------------
+#STARTED: gRPC prelab :start:16/05/20 01:48PM
+
+:Question: What do you find most intersing about this and why?
+________________________________________________________
+
+definitly streaming messages
+#TODO:  
+
+
+:Main Idea: 1. Specify methods with parameters and return types 
+            2. Implement that interface on the server
+            3. Create a stub on the client side which provides 
+               that interface
+
+Data Representation
+____________________________
+gRPC uses something called **Protocol Buffers** 
+
+:Protocol Buffer: An open source mechanism for serializing structured data
+                  (Google did it). It can also be used with other formats
+                  such as JSON
+
+Proto Files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+a **Proto File** specifies what the data will look like 
+(similar to a class/struct definition)
+
+.. code-block:: python
+        :linenos:
+
+        message Person {
+                string name = 1;
+                int32 id = 2;
+                bool has_ponycopter = 3;
+        }
+
+Then a command line utility **protoc** can be used to generate classes
+in any of your perferred languages 
+
+**Services** (rpc's) are defined in the same *.proto* files like this
+
+.. code-block:: python
+        :linenos:
+
+        service Greeter {
+                rpc Name (ParamType) returns (ReturnType) {}
+        {
+
+
+
+here **ParamType** is a **message** which will be the type for the
+parameter being passed and **ReturnType** is similary a **message** 
+which will be returned by the RPC
+
+#TODO: DNS TTL prelab
+
+#TODO: break down go code from lab 1
+#TODO: :optional: Development of DNS
+#TODO: :optional: Microkernal approach to Host networking

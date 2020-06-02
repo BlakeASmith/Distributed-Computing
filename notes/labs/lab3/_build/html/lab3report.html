@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>CSC Lab 3: Analysis of Map-Reduce Performance &#8212; Lab 3  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="csc-lab-3-analysis-of-map-reduce-performance">
+<h1>CSC Lab 3: Analysis of Map-Reduce Performance<a class="headerlink" href="#csc-lab-3-analysis-of-map-reduce-performance" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="sequential-map-reduce-a-baseline">
+<h2>Sequential Map Reduce, A Baseline<a class="headerlink" href="#sequential-map-reduce-a-baseline" title="Permalink to this headline">¶</a></h2>
+<p>Before proceeding with testing my implementation from Lab 2
+I will first gather some metrics from
+the sequential implementation given in <cite>mrseqential.go</cite>.
+This baseline will be used to determine at what point the
+multi-process implementation becomes worthwhile and what
+the trade offs are in regards to space &amp; time complexity.</p>
+<div class="section" id="the-phases-of-map-reduce-in-the-sequential-case">
+<h3>The Phases of Map Reduce (In the Sequential Case)<a class="headerlink" href="#the-phases-of-map-reduce-in-the-sequential-case" title="Permalink to this headline">¶</a></h3>
+<p>In order to estimate the performance of a sequential map-reduce
+I will be collecting the following information at each step
+in the execution.</p>
+<ol class="arabic">
+<li><p>Read input files and pass into the map function, producing
+a collection of intermediate values.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Time taken to read in the input files and produce
+the intermediate collection.</p></li>
+<li><p>Space required to store the intermediate values</p></li>
+<li><p>Time taken to sort the intermediate values</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Run Reduce on each key and create a single output file</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Time taken to complete all reduce jobs and produce
+the full output</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</div>
+<div class="section" id="collecting-stats-for-mrsequential-go">
+<h3>Collecting Stats for <cite>mrsequential.go</cite><a class="headerlink" href="#collecting-stats-for-mrsequential-go" title="Permalink to this headline">¶</a></h3>
+<p>First I created a struct to keep all of the statistics.</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">Stats</span> <span class="kd">struct</span> <span class="p">{</span>
+        <span class="c1">// total execution time</span>
+        <span class="nx">TotalTime</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span>
+        <span class="c1">// time to produce intermedates</span>
+        <span class="nx">MapSeqenceTime</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span>
+        <span class="c1">// (in-memory) space required to store intermediates (in bytes)</span>
+        <span class="nx">IntermediateSpace</span> <span class="kt">int</span>
+        <span class="c1">// time to sort the intermediates</span>
+        <span class="nx">SortTime</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span>
+        <span class="c1">// runtime of reduce jobs, including storage of the results</span>
+        <span class="nx">ReduceSequenceTime</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span>
+        <span class="c1">// number of bytes from all the keys (including duplicates)</span>
+        <span class="nx">NumKeyBytes</span> <span class="kt">int</span>
+        <span class="c1">// number of bytes from all the values</span>
+        <span class="nx">NumValBytes</span> <span class="kt">int</span>
+        <span class="c1">// number of KV pairs processed</span>
+        <span class="nx">NumRecords</span> <span class="kt">int</span>
+        <span class="c1">// number of keys after grouping (number of calls to reduce</span>
+        <span class="nx">NumKeys</span> <span class="kt">int</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>After collecting the data I simply output the <em>JSON</em> encoding of the struct to <em>stdout</em>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+        <span class="s2">&quot;TotalTime&quot;</span><span class="p">:</span><span class="mi">703120545</span><span class="p">,</span>
+        <span class="s2">&quot;MapSeqenceTime&quot;</span><span class="p">:</span><span class="mi">371379906</span><span class="p">,</span>
+        <span class="s2">&quot;IntermediateSpace&quot;</span><span class="p">:</span><span class="mi">3150705</span><span class="p">,</span>
+        <span class="s2">&quot;SortTime&quot;</span><span class="p">:</span><span class="mi">194342963</span><span class="p">,</span>
+        <span class="s2">&quot;ReduceSequenceTime&quot;</span><span class="p">:</span><span class="mi">127343518</span><span class="p">,</span>
+        <span class="s2">&quot;NumKeyBytes&quot;</span><span class="p">:</span><span class="mi">2526757</span><span class="p">,</span>
+        <span class="s2">&quot;NumValBytes&quot;</span><span class="p">:</span><span class="mi">623948</span><span class="p">,</span>
+        <span class="s2">&quot;NumRecords&quot;</span><span class="p">:</span><span class="mi">623948</span><span class="p">,</span>
+        <span class="s2">&quot;NumKeys&quot;</span><span class="p">:</span><span class="mi">22107</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="script-to-run-various-senarios">
+<h4>Script to Run Various Senarios<a class="headerlink" href="#script-to-run-various-senarios" title="Permalink to this headline">¶</a></h4>
+<p>Next I wrote a <em>Python</em> script to run various scenarios and serialize the results to be analyzed later.
+This script will run mrseqential.go on different numbers of input files and store the results for each
+case in a <em>.json</em> file</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">textfiles</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;pg-*&#39;</span><span class="p">))</span>
+<span class="n">of</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sequential_stats.json&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">txt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">textfiles</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+    <span class="n">running</span> <span class="o">=</span> <span class="n">textfiles</span><span class="p">[:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;running mrsequential.go with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">running</span><span class="p">)</span><span class="si">}</span><span class="s2"> files&quot;</span><span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;go run ./mrsequential.go wc.so &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">running</span><span class="p">])</span>
+    <span class="n">stream</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+    <span class="n">_json</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;seq_</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">running</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">jsonstr</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_json</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">of</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">jsonstr</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>From the following figure you can see that the runtime scales linearly with the input size as expected.</p>
+<div class="figure align-default">
+<img alt="_images/seq_time_perf.png" src="_images/seq_time_perf.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="distributed-map-reduce">
+<h2>Distributed Map Reduce<a class="headerlink" href="#distributed-map-reduce" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Lab 3</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CSC Lab 3: Analysis of Map-Reduce Performance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sequential-map-reduce-a-baseline">Sequential Map Reduce, A Baseline</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-phases-of-map-reduce-in-the-sequential-case">The Phases of Map Reduce (In the Sequential Case)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#collecting-stats-for-mrsequential-go">Collecting Stats for <cite>mrsequential.go</cite></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#script-to-run-various-senarios">Script to Run Various Senarios</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#distributed-map-reduce">Distributed Map Reduce</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">&lt;no title&gt;</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Blake Smith.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/lab3report.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

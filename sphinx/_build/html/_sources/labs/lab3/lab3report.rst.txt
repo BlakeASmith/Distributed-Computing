@@ -1,0 +1,303 @@
+CSC Lab 3: Analysis of Map-Reduce Performance
+=====================================================
+
+Sequential Map Reduce, A Baseline
+------------------------------------------------------
+
+Before proceeding with testing my implementation from Lab 2 
+I will first gather some metrics from 
+the sequential implementation given in `mrseqential.go`. 
+This baseline will be used to determine at what point the 
+multi-process implementation becomes worthwhile and what 
+the trade offs are in regards to space & time complexity. 
+
+The Phases of Map Reduce (In the Sequential Case)
+______________________________________________________
+
+In order to estimate the performance of a sequential map-reduce
+I will be collecting the following information at each step
+in the execution.
+
+1. Read input files and pass into the map function, producing
+   a collection of intermediate values.
+
+        - Time taken to read in the input files and produce 
+          the intermediate collection.
+        - Space required to store the intermediate values
+        - Time taken to sort the intermediate values
+
+
+2. Run Reduce on each key and create a single output file
+
+        - Time taken to complete all reduce jobs and produce
+          the full output
+
+Collecting Stats for `mrsequential.go`
+__________________________________________________________
+
+First I created a struct to keep all of the statistics.
+
+.. code-block:: go
+
+        type Stats struct {
+                // total execution time
+                TotalTime time.Duration
+                // time to produce intermedates
+                MapSeqenceTime time.Duration
+                // (in-memory) space required to store intermediates (in bytes)
+                IntermediateSpace int
+                // time to sort the intermediates
+                SortTime time.Duration
+                // runtime of reduce jobs, including storage of the results                             
+                ReduceSequenceTime time.Duration
+                // number of bytes from all the keys (including duplicates)                             
+                NumKeyBytes int                                                                                   
+                // number of bytes from all the values                                                            
+                NumValBytes int                                                                                   
+                // number of KV pairs processed                                                               
+                NumRecords int                                                                                
+                // number of keys after grouping (number of calls to reduce                                   
+                NumKeys int                                                                                   
+        }
+
+.. raw:: pdf
+
+        PageBreak
+
+After collecting the data I simply output the *JSON* encoding of the struct to *stdout*.
+
+::
+
+        {
+                "TotalTime":703120545,
+                "MapSeqenceTime":371379906,
+                "IntermediateSpace":3150705,
+                "SortTime":194342963,
+                "ReduceSequenceTime":127343518,
+                "NumKeyBytes":2526757,
+                "NumValBytes":623948,
+                "NumRecords":623948,
+                "NumKeys":22107
+        }
+
+Script to Run Various Senarios
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Next I wrote a *Python* script to run various scenarios and serialize the results to be analyzed later.
+This script will run mrseqential.go on different numbers of input files and store the results for each 
+case in a *.json* file
+
+.. literalinclude:: testrunner.py
+
+
+From the following figure you can see that the runtime scales linearly with the input size as expected. 
+
+.. figure:: ./seq_time_perf.png
+
+
+Distributed Map Reduce
+-------------------------------------------------------------------------------------
+
+Phases / LifeCycle
+___________________________________________
+
+My implementation of Distributed Map Reduce is structured as follows:
+
+1. The Master prepares a list of structs for each of the Map jobs, keeping track
+   of which jobs are assigned and which are finished.
+
+2. Workers request jobs from the master and are assigned the first job which
+   is still marked unassigned.
+
+3. Workers inform the Master once they have finished their job and are then assigned 
+   another job if one is avalable. If there are no jobs available the Worker is either
+   told to wait or to quit.
+
+4. Once all Map jobs are marked as finished, the master separates the 
+   results into N reduce buckets and creates a reduce job for each.
+
+5. Workers continue to request jobs and inform on completion until 
+   all reduce jobs are marked finished
+
+6. When all Jobs are finished any Worker requesting a job is told to quit
+
+7. On the first call to the timing routine (Done()), after all reduce jobs 
+   are marked complete, a value of *true* is returned causing the Master 
+   to Exit
+
+8. Any remaining Workers exit as they are not able to conact the Master
+
+
+
+Tracking the Stats for Each Task
+___________________________________________
+
+In the Worker the following is recorded for each Task/Job:
+
+.. code-block:: go
+
+        type TaskStat struct { 
+                // ID for the job
+                JobNumber  int
+                // ID for the specific instance of attempting the job
+                TaskID     int   
+                // Flag to indicate if it's a map or a reduce
+                Reduce     bool                                         
+                // runtime of the job 
+                //(between receiving the job and informing the master of completion)
+                Time       time.Duration                                
+                // Amount of  space used to store intermedates
+                Space      int
+                // Number of unique keys processed
+                UniqueKeys int
+                // Total number of records processed
+                Records    int
+
+
+Tracking Stats on The Master
+___________________________________________
+
+In the Master the following stats are recorded.
+
+.. code-block:: go
+
+        type Stat struct {                                        
+                // Time between starting the master and returning *true* from Done()
+                TotalTime                   time.Duration         
+                // Time when the Master started
+                StartTime                   time.Time             
+                // Time when the Master finishes
+                EndTime                     time.Time             
+                // Duration of the Map phase
+                MapSequenceTime             time.Duration
+                // Duration of the Reduce phase
+                ReduceSequenceTime          time.Duration
+                // List of the stats for every completed Job
+                StatsPerJob                 []TaskStat
+                // Time taken to partition the results from map
+                // into buckets for Reduce tasks
+                PartitioningTime            time.Duration                   
+                // duration of parttioning for each intermediate Map file
+                PartitioningTimePerMap      []time.Duration
+                // Memory space used while partitioning
+                PartitioningSpace           []int
+                // Total disk space used for intermediate files produced in the Map phase
+                IntermedateHDSpaceForMap    int  
+                // Total disk space used for intermediate files produced in the Reduce phase
+                IntermedateHDSpaceForReduce int  
+                NumberOfReduceJobs          int  
+                NumberOfMapJobs             int
+                // Total number of unique keys processed
+                NumberOfUniqueKeys          int
+                // Total number of records processed
+                NumberOfRecords             int
+                // Total number of bytes across all input files
+                InputBytes                  int
+        }
+
+Running Scenarios & Collecting the Data
+---------------------------------------------------
+
+I used *Python* to run the test scenarios, as well as to 
+interpret the results (see the Scripts_ section). 
+
+The script runs the wc.go plugin using one, two, three, ..., and 8 Worker process on all variations of input.
+(with 1 file, 2 files, 3 files, ..., 8 files). Thus a total of 64 scenarios are run.
+
+Those 64 scenarios are repeated 20 times in order to calculate a good average value.
+
+Results from each scenario are appended to a file *stat.json*
+
+Once the script finishes the results are found in a file *stat.stat*.
+
+Interpreting Results
+---------------------------------------------------
+
+Another *Python* script pulls the data produced from the 
+tests and computes various statistics (see Scripts_).
+
+The script generates the following tables (as *csv files*) and figures.
+
+Average, Worst, & Best Runtime by Number of Workers and Input Size 
+_____________________________________________________________________
+
+Average, Worst, & Best Case Space used by Number of Workers and Input Size
+___________________________________________________________________________
+
+Average, Worst, & Best Case Runtime Per Byte of Input
+______________________________________________________
+
+
+Computational Complexity
+______________________________________________________
+
+In the Sequential Case 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Let **n** be the number of **keys**
+* let **m** be the number of **values**
+
+:Single Map Job:
+        The :func:`Map` operation involves the following procedures:
+
+        1. Call to :func:`mapf` provided by plugin
+
+                * Usually O(m) but depends on the specific implementation
+                        * The transformation is performed once per value in the input
+                        * for the purposes of this analysis I will assume O(m)
+
+        2. Encoding and storage of results from :func:`mapf`
+
+                * Also O(m) as the number of key-value pairs to encode is the same as the 
+                  in the input to :func:`mapf`
+
+:Single Reduce Job:
+        The :func:`Reduce` operation involves the following:
+
+        1. Decoding JSON data from intermediate file
+
+                * this is a linear operation (O(m)) as there is one 
+                  entry in the file for every value.
+
+        2. Group values by key
+
+                * We do this by iterating over the values and 
+                  adding them to the appropriate list using a map
+                * This is O(m) as well
+ 
+        3. Call to :func:`reducef` provided by plugin for each key
+
+                * :func:`reducef` is called for each key and Its complexity will 
+                  depend on the number of values which have that key. 
+                * Calling :func:`reducef` for every Key will, in effect, consider
+                  every value once. Meaning a collective O(m) runtime for the :func:`reducef` calls.
+
+        4. Sorting the reduced values and logging in an output file
+
+                * the sort implementation used is :math:`O(nlogn)`
+
+        
+
+:Partitioning Data into Reduce Buckets:
+
+
+Scripts
+-------------------------------------------------
+
+.. literalinclude:: ./parsedata.py
+        :language: python
+        :caption: testscript.py
+
+.. literalinclude:: ./parsedata.py
+        :language: python
+        :caption: testscript.py
+
+
+
+
+
+
+
+
+
+
