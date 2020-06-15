@@ -51,20 +51,28 @@ def stats_by_num_workers():
 
     return stats_sets_per_worker_senarios
 
-df = pandas.DataFrame.from_records(stats_by_num_workers())
+cols = [f"{i} Workers" for i in reversed(range(1,NUMBER_OF_WORKER_SCENARIOS))]
+
+data = {}
+
+try:
+    for i,statlist in enumerate(stats_by_num_workers()):
+        data[cols[i]] = {f"{i} Input Files":it["TotalTime"] for i, it in zip(range(1, NUMBER_OF_INPUT_SETS+1), statlist)}
+except IndexError:
+    pass
+        
+print(data)
 
 
+# df = pandas.DataFrame.from_records(stats_by_num_workers())
 
-fig = go.Figure(data=[go.Table(
-    header=dict(values=list(df.columns),
-                fill_color='paleturquoise',
-                align='left'),
-    cells=dict(values=[df.TotalTime],
-               fill_color='lavender',
-               align='left'))
-])
+# fig = go.Figure(data=[go.Table(
+    # header=dict(values=list(df.columns),
+                # fill_color='paleturquoise',
+                # align='left'),
+    # cells=dict(values=[df.TotalTime],
+               # fill_color='lavender',
+               # align='left'))
+# ])
 
-fig.show()
-
-
-
+# fig.show()
