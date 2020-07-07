@@ -1,0 +1,475 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Distributed Systems for Fun and Profit &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Distributied Computing Summer 2020
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="google_article.html">Google Article on Distributed Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aws_beyondelevennines_talk.html">Noes from AWS Beyond Eleven Nines Talk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clock_exercise/clock_exercise.html">Clock Exercise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week2.html">Semantics of RPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grpc/grpc.html">Diggind in to the gRPC example code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labs/lab2.html">Lab 2: A Simplified Distributed Map Reduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labs/lab3/lab3report.html">CSC Lab 3: Analysis of Map-Reduce Performance</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Distributied Computing Summer 2020</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Distributed Systems for Fun and Profit</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/dist_sys_for_fun_and_profit.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="distributed-systems-for-fun-and-profit">
+<h1>Distributed Systems for Fun and Profit<a class="headerlink" href="#distributed-systems-for-fun-and-profit" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list">
+<dt class="field-odd">Question from prelab exercise</dt>
+<dd class="field-odd"><p>What do you find most interesting about Chapter 1
+(Distributed systems at a high level), and why?</p>
+</dd>
+<dt class="field-even">My Answer</dt>
+<dd class="field-even"><p>I found that Takada gave interesting explanations for many of the trade-offs
+involved in distributed computing.
+(Performance vs Availability, Intelligibility vs Performance, etc).</p>
+<p>What was most interesting to me, from the first chapter, was the notion
+that oftentimes availability must be sacrificed in order
+to maintain guarantees about latency. Thus
+exposing the trade-off between availability &amp; latency guarantees.</p>
+<p>I also enjoyed the explanation at the beginning of the chapter
+regarding the theoretical lack of need for distributed systems in
+the first place. Takada expresses the notion that, given infinite r&amp;d
+resources there would be no requirement, or benefit, to splitting a
+computation across multiple nodes. Instead the hardware of a single machine
+could be indefinitely upgraded.</p>
+<p>The reason that distributed systems are required in practice is only due
+to the limitations of our current technology.</p>
+</dd>
+</dl>
+<p>Two consequences of distribution:</p>
+<ul class="simple">
+<li><p>Information travels at the speed of light</p></li>
+<li><p><strong>independent things fail independently</strong></p></li>
+</ul>
+<div class="section" id="notes-from-chapter-1">
+<h2>Notes from Chapter 1<a class="headerlink" href="#notes-from-chapter-1" title="Permalink to this headline">¶</a></h2>
+<p>As system requirements for a computation increase, a point
+is reached at which it is no longer feasible (or is cost prohibitive)
+to upgrade a single machine to do the job. In consequence of this
+it becomes a requirement to run computations over multiple machines
+(a distributed system).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Definition of <strong>Scalability</strong></dt>
+<dd class="field-odd"><p>The ability of a system to be enlarged to accommodate
+a growing amount of work</p>
+</dd>
+</dl>
+<p>In other words, as the size of the problem increases the performance
+should get <strong>incrementally worse</strong>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Size Scalability</dt>
+<dd class="field-odd"><p>adding more nodes to the problem should make the
+system <strong>linearly</strong> faster. Ideally 3x as many nodes
+would mean 3x as fast performance, or 3x as much data
+processed in the same amount of time.</p>
+</dd>
+<dt class="field-even">Geographic Scalability</dt>
+<dd class="field-even"><p>possibility of adding more data centres in different
+locations to increase response times (dealing with
+cross-data centre latency reasonably).</p>
+</dd>
+<dt class="field-odd">Admin Scalability</dt>
+<dd class="field-odd"><p>The ability to add nodes to the system without
+increasing administrative costs.</p>
+</dd>
+</dl>
+<div class="section" id="performance-availability">
+<h3>Performance &amp; Availability<a class="headerlink" href="#performance-availability" title="Permalink to this headline">¶</a></h3>
+<p><strong>Performance</strong> is the amount of work accomplished by a system
+in comparison to the resources (including time) used.</p>
+<p>In contrast, <strong>Availability</strong> is the <em>proportion</em> of time in which
+the system functions as intended.</p>
+<div class="math notranslate nohighlight">
+\[Availability = \frac{uptime}{uptime + downtime}\]</div>
+<div class="section" id="latency-vs-latent">
+<h4>Latency vs Latent<a class="headerlink" href="#latency-vs-latent" title="Permalink to this headline">¶</a></h4>
+<dl class="field-list simple">
+<dt class="field-odd"><strong>Latency</strong></dt>
+<dd class="field-odd"><p>The period of delay between the initiation of something
+and the occurrence of it.</p>
+<ul class="simple">
+<li><p>example; how long does it take for a write to be visible
+to readers?</p></li>
+</ul>
+</dd>
+<dt class="field-even">Latent</dt>
+<dd class="field-even"><p>Something is <strong>latent</strong> if it exists but is inactive.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="availability-fault-tolerance">
+<h4>Availability &amp; Fault Tolerance<a class="headerlink" href="#availability-fault-tolerance" title="Permalink to this headline">¶</a></h4>
+<p><strong>Fault Tolerance</strong> is the ability of a system to
+continue to behave (in a well-defined way) when faults occur.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You cannot tolerate faults which you have not considered</p>
+<p>==&gt; It is important to consider what can go wrong in a distributed
+system and design the system appropriatley</p>
+</div>
+</div>
+<div class="section" id="what-s-in-the-way">
+<h4>What’s in the Way?<a class="headerlink" href="#what-s-in-the-way" title="Permalink to this headline">¶</a></h4>
+<p>A distributed system is constrained by both the <strong>number of nodes</strong>
+and the <strong>distance between them</strong>.</p>
+<p>Thus the following is clear:</p>
+<ul class="simple">
+<li><p>more nodes =&gt; higher probability of failure</p></li>
+<li><p>more nodes =&gt; more communication overhead</p></li>
+<li><p>farther apart nodes =&gt; increased latency of communication</p></li>
+</ul>
+<p>I use the notation ‘=&gt;’ above since these factors are
+universally true (tautology) as they are a consequence of
+<strong>physical constraints</strong>.</p>
+<p>Any other factors are a consequence of a system’s <strong>design</strong>.</p>
+</div>
+<div class="section" id="intelligibility-vs-efficiency">
+<h4>Intelligibility vs Efficiency<a class="headerlink" href="#intelligibility-vs-efficiency" title="Permalink to this headline">¶</a></h4>
+<p>Generally speaking, there is a trade off between
+how easy a design is to understand and it’s performance.</p>
+<p>A system which makes <strong>weak guarentees</strong> has more freedom of action,
+and thus more potential for performance. However it also becomes
+more complicated to reason about.</p>
+<p>When failures occur which increase the latency of a system, a system
+must decide whether do reduce availability, &amp; thus maintain it’s
+guarantees about performance, or to stay available and fail to meet
+it’s performance guarantees.</p>
+<p>In this sense, there is a trade off between <strong>availabilty</strong> and <strong>Performance</strong>.</p>
+</div>
+</div>
+<div class="section" id="technique-partition-replicate">
+<h3>Technique: Partition &amp; Replicate<a class="headerlink" href="#technique-partition-replicate" title="Permalink to this headline">¶</a></h3>
+<p>A Divide &amp; Conquer approach</p>
+<ol class="arabic simple">
+<li><p>Partition any data that can be partitioned and provide one
+partition to each node</p></li>
+<li><p>Replicate any data which cannot be partitioned and provide
+a copy of that data to each node</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">A problem with replication</dt>
+<dd class="field-odd"><p>maintaining multiple copies of the same data requires some way to
+keep that data synchronised and/or deal with inconsistencies.</p>
+</dd>
+</dl>
+<p>Furthermore, there is a trade off between the strength of consistency
+and latency. A weaker consistency model will be faster than a stronger one.</p>
+</div>
+</div>
+<div class="section" id="chapter-2">
+<h2>Chapter 2<a class="headerlink" href="#chapter-2" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">Question from prelab</dt>
+<dd class="field-odd"><p>What did you find most interesting in Chapter 2 of Distributed
+Systems for Fun and Profit and why?</p>
+</dd>
+<dt class="field-even">My Answer</dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<p>I found that the Author gave some interesting thoughts about abstractions, and how they can
+often break down in distributed systems. The part of the chapter which
+I found most interesting was the explanations of the FLP Impossibility Result and the CAP theorem.</p>
+<p>In regards to the FLP Impossibility Result, I found it
+interesting how many assumptions must be made in providing a
+deterministic consensus algorithm. All that is required for a
+deterministic algorithm not to be possible is that a single process can
+fail. Thus, in order to guarantee a finite runtime, one must assume that there
+will be no failures at all. In practical applications it is unlikely that a consensus
+algorithm would not eventually halt.
+However it is interesting to know that there will never be a “perfect” consensus algorithm.</p>
+<p>The CAP theorem brings about some really interesting trade offs. Knowing that it is not
+possible to have strong consistency and complete availability at the same time during a
+network failure leads us to ask how loose of a consistency model we can get away with.
+If strong consistency is truly required for our system then what sacrifices can we make in regards to availability?</p>
+<p>I also liked the idea of having Client-centric consistency in which you don’t
+guarantee perfectly up to data data, but you do guarantee that no client will
+receive older data than they have already. By maintaining a cached value as part
+of the client library you can ensure that, on each request, the client will receive data
+which is at least as recent as what it has already received. Based on my experience I feel
+that this is sufficient not to break client code in most cases. Usually it is not critical
+to have the MOST up to date data all of the time. However, sometimes receiving data which is
+more out of date than what was previously received would definitely lead to some elusive bugs,
+especially if it happens infrequently and is thus not expected.</p>
+<div class="section" id="abstractions-are-fake">
+<h3>Abstractions are fake<a class="headerlink" href="#abstractions-are-fake" title="Permalink to this headline">¶</a></h3>
+<p>Abstractions make the world more manageable, but fundamentally  every
+situation is at least a little different. Thus every node is a little
+different. Though we make abstractions such that we can treat each node
+as the same, we must understand that specific circumstances at any node
+could break that abstraction at any time.</p>
+<p>How much reality can be stripped away without missing anything important?
+it is likely not possible to know in advance (the time of designing the abstraction).</p>
+</div>
+<div class="section" id="a-system-model">
+<h3>A System Model<a class="headerlink" href="#a-system-model" title="Permalink to this headline">¶</a></h3>
+<p>A system model is a set of assumptions about the environment on which
+a distributed system is implemented.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>What capabilities do the nodes have</dt><dd><ul>
+<li><p>How may they fail at those capabilities</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>time? Order? How does that work?</p></li>
+</ul>
+<p>…</p>
+</div>
+<div class="section" id="the-consensus-problem">
+<h3>The Consensus Problem<a class="headerlink" href="#the-consensus-problem" title="Permalink to this headline">¶</a></h3>
+<dl class="field-list">
+<dt class="field-odd">FLP Impossibility Result</dt>
+<dd class="field-odd"><p>There is no deterministic algorithm for the consensus problem
+in an asynchronous system which is subject to failures.</p>
+<ul class="simple">
+<li><p>even with a reliable network</p></li>
+<li><p>even if a single process can fail at a time</p></li>
+<li><p>even if that process only fails by crashing</p></li>
+</ul>
+<p>Most of the time consensus can be reached, but
+there is no guarantee that an algorithm will halt.</p>
+</dd>
+<dt class="field-even">CAP theorem</dt>
+<dd class="field-even"><p>It is not possible to have all three of these, you must pick 2.</p>
+<ul class="simple">
+<li><p>Consistency: same data at the same time</p></li>
+<li><p>Availability: survivors continue to operate despite node failures</p></li>
+<li><p>Partition Tolerance: system still operates despite message losses</p></li>
+</ul>
+<p>This separates D.systems into 3 categories</p>
+<ul>
+<li><p>CA systems which have consistency and availability, but do not tolerate network partitions</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>does not distinguish between node failures and network failures.</p></li>
+<li><dl class="simple">
+<dt>must stop accepting writes in the case of any failure to remain consistent &amp; available.</dt><dd><ul>
+<li><p>you cannot maintain two replicas without communicating while accepting writes.
+Thus the only way to remain consistent is to stop accepting writes all together.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>CP systems like PAXOS which do not remain available during partitions, but do remain consistent</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>forces the smaller side of the partition to be unavailable, thus maintaining consistency
+in the majority partition and sacrificing availability of the minority partition.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>AP systems like Dynamo which do not remain consistent during partitions, but do remain available</p></li>
+</ul>
+</dd>
+</dl>
+<p>In the event of a partition there are 3 options to choose from.</p>
+<ol class="arabic simple">
+<li><p>Stop accepting writes across the entire system. Thus maintaining consistency
+and accessibility for reads, but otherwise halting progress.</p></li>
+<li><p>Continue to provide strong consistency by making the minority partition unavailable.</p></li>
+<li><p>Continue to provide availability by having less strict consistency requirements
+(not requiring full consensus on every write).</p></li>
+</ol>
+</div>
+<div class="section" id="consistency-models">
+<h3>Consistency Models<a class="headerlink" href="#consistency-models" title="Permalink to this headline">¶</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Client-centric</dt>
+<dd class="field-odd"><p>guarantee that the client will not read data which is older than
+what it has already seen. It may not be the “newest” data, but it will be
+updated (or the same) as their previous lookup.  Essentially, stop the client from
+travelling back in time in regards to their data.
+This is done by maintaining a cached
+value in the client library.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Blake Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

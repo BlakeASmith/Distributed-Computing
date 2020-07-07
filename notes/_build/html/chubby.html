@@ -1,0 +1,330 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Summary of The Chubby lock service for loosely-coupled distributed systems &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="CSC Lab 3: Analysis of Map-Reduce Performance" href="labs/lab3/lab3report.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Distributied Computing Summer 2020
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="google_article.html">Google Article on Distributed Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aws_beyondelevennines_talk.html">Noes from AWS Beyond Eleven Nines Talk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clock_exercise/clock_exercise.html">Clock Exercise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week2.html">Semantics of RPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grpc/grpc.html">Diggind in to the gRPC example code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labs/lab2.html">Lab 2: A Simplified Distributed Map Reduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labs/lab3/lab3report.html">CSC Lab 3: Analysis of Map-Reduce Performance</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Summary of The Chubby lock service for loosely-coupled distributed systems</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Distributied Computing Summer 2020</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Summary of The Chubby lock service for loosely-coupled distributed systems</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/chubby.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="summary-of-the-chubby-lock-service-for-loosely-coupled-distributed-systems">
+<h1>Summary of The Chubby lock service for loosely-coupled distributed systems<a class="headerlink" href="#summary-of-the-chubby-lock-service-for-loosely-coupled-distributed-systems" title="Permalink to this headline">¶</a></h1>
+<p><strong>Chubby</strong> is a distributed lock service which is focused on providing <strong>course-grained</strong>
+locking (locks held over hours &amp; days vs seconds). Chubby emphasises simple semantics
+and ease of programming over storage capacity and throughput. Chubby is used in projects such
+as <strong>GFS</strong> and <strong>Bigtable</strong>, and is often employed as a name service. Chubby has been proven to
+be scalable to tens of thousands of client processes using the same Chubby instance (which itself
+usually features 5 servers).</p>
+<p>Another perk of Chubby is that clients interface with it using a file-system like API. Using Open() to
+create a Chubby handle (aquire a lock) and Close() to destroy the handle (releasing the lock). Then either a single
+client can access it in write-mode, or any number of clients can access in read mode.
+I particularly like the idea of using a locking system such as Chubby for leader election. Simply allow
+the server which first aqires the lock to be the leader. However it does come with the downside of reqiring an external
+service, as apposed to Raft leader election which is completed within a cluster.</p>
+<p>Here are some questions I was left with after reading through the paper:</p>
+<ol class="arabic">
+<li><p>What happens when a lock is aquired and never released? (call to Open() without a call to Close()) are we just
+assuming that the clients won’t make this mistake? or that there aren’t any bad actors?</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>What if a process aquires a lock and then dies?</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Is familiarity (using a unix-filesystem like API) really a good thing here? clearly it’s nice to work with as any developer will
+be familiar with the unix (or a similar file system), but isn’t it a bit misleading?</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>In the paper, the authors complained about developers using their system wrongly, stating that “few consider
+the effects of independent machine failures on locks in a system with asyncronous communications”. Doesn’t having
+an interface so similar to a local file-system encourage this?</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><dl class="simple">
+<dt>Lack of manditory locks?</dt><dd><ul class="simple">
+<li><p>Often the reason for using a lock is to prevent concurrent access to a file. The reason for preventing that
+access is to prevent undefined behaviour arising from reads &amp; writes occuring in a non-deterministic order.
+Chubby employs only <strong>advisory</strong> locks, meaning that the developer has the ability to read the file without aquiring
+the lock. They state in the paper that a reason for doing this is to ease debugging, but i’m failing to see how
+allowing a file to be accessed without aquiring a lock is a good idea? Also, realisically, providing developers
+with the ability to do this (even for testing &amp; debugging purposes) means that they will do it and that they will
+sometimes forget that they did. Well, until something horrible happens.</p></li>
+<li><p>If you refer to the usage plot provided on page 11 of the paper you will notice that there are 1000 exlusive locks given, but
+12, 000 open files</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<p>The had a look at these other sources as well:</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://blog.acolyer.org/2015/02/13/the-chubby-lock-service-for-loosely-coupled-distributed-systems/">https://blog.acolyer.org/2015/02/13/the-chubby-lock-service-for-loosely-coupled-distributed-systems/</a></p></li>
+<li><p><a class="reference external" href="https://www.sciencedirect.com/topics/computer-science/coarse-granularityhttps://docs.oracle.com/cd/E19253-01/816-5137/guide-5/index.html">https://www.sciencedirect.com/topics/computer-science/coarse-granularityhttps://docs.oracle.com/cd/E19253-01/816-5137/guide-5/index.html</a></p></li>
+<li><p><a class="reference external" href="https://docs.oracle.com/cd/E19253-01/816-5137/guide-5/index.html">https://docs.oracle.com/cd/E19253-01/816-5137/guide-5/index.html</a></p></li>
+<li><p><a class="reference external" href="http://pages.cs.wisc.edu/~swift/classes/cs739-sp12/blog/2012/02/the_chubby_lock_service_for_lo.html">http://pages.cs.wisc.edu/~swift/classes/cs739-sp12/blog/2012/02/the_chubby_lock_service_for_lo.html</a></p></li>
+<li><p><a class="reference external" href="https://www.usenix.org/legacy/publications/library/proceedings/osdi04/tech/full_papers/maccormick/maccormick_html/index-1.html">https://www.usenix.org/legacy/publications/library/proceedings/osdi04/tech/full_papers/maccormick/maccormick_html/index-1.html</a></p></li>
+<li><p><a class="reference external" href="https://www2.cs.uic.edu/~brents/cs494-cdcs/slides/thegooglechubbylockservice.pdf">https://www2.cs.uic.edu/~brents/cs494-cdcs/slides/thegooglechubbylockservice.pdf</a></p></li>
+</ol>
+<p>Source [1] explains that the case of a dead process is handled using a lock-delay and sequencer checking. A lock-delay is the time period
+between a client dieing and a lock becoming available. The client library sends <em>keep-alive</em> messages to the Chubby master, so a failure at
+the client will be detected via a timeout. Adding a sufficent lock-delay prevents a client failure from resulting in an inconsistant state.</p>
+<p>consider this scenario where no lock delay is provided:</p>
+<img alt="_images/lock-delay.png" src="_images/lock-delay.png" />
+<p>By adding a lock-delay (and thus denying ClientB from getting the lock) we prevent the inconsistant state imposed by the late
+delivery of ClientB’s write, as ClientB would still hold the lock (dispite being dead)</p>
+<p>There was also mention of sequencer checks, however I was unable to find a satisfactory explaination of how they are used in the case of
+process failiure. I was also unable to find any action taken by Chubby to deal with bad actors which could hold a lock indefinitley, whether
+on purpose (malicous) or by accident (developer error, failed to call Close()). I also cannot see how this type of situation would be detected by the
+Chubby Master.</p>
+<p>The oversight of this, as well as my other two questions, are addressed by the fact that Chubby was designed for internal
+use at Google. Because of this it simply assumes that there aren’t bad actors in the system.</p>
+  <pre>
+  ┌─┐                                 ┌─┐
+  ║"│                                 ║"│
+  └┬┘                                 └┬┘
+  ┌┼┐                                 ┌┼┐
+   │             ┌──────┐              │
+  ┌┴┐            │Master│             ┌┴┐
+BadGuy           └──────┘           OkDude
+  │     Lock(F)     │                 │
+  │ ────────────────>                 │
+  │                 │                 │
+  │    Aquired(F)   │                 │
+  │ <────────────────                 │
+  │                 │                 │
+  │   KeepAlive(F)  │                 │
+  │ ────────────────>                 │
+  │                 │                 │
+  │   KeepAlive(F)  │                 │
+  │ ────────────────>                 │
+  │                 │                 │
+  │   KeepAlive(F)  │                 │
+  │ ────────────────>                 │
+  │                 │                 │
+  │                 │                 │
+  │          some time later          │
+  │                 │                 │
+  │                 │                 │
+  .                 .                 .
+  .   KeepAlive(F)  .                 .
+  . ────────────────>                 .
+  .                 .                 .
+  .                 .     Lock(F)     .
+  │                 │ <────────────────
+  │                 │                 │
+  │                 │    Denied(F)    │
+  │                 │ ────────────────>
+  │                 │                 │
+  │   KeepAlive(F)  │                 │
+  │ ────────────────>                 │
+  │                 │                 │
+  │                 │                 │
+  │          some time later          │
+  │                 │                 │
+  │                 │                 │
+BadGuy           ┌──────┐           OkDude
+  ┌─┐            │Master│             ┌─┐
+  ║"│            └──────┘             ║"│
+  └┬┘                                 └┬┘
+  ┌┼┐                                 ┌┼┐
+   │                                   │
+  ┌┴┐                                 ┌┴┐
+
+  </pre></div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="labs/lab3/lab3report.html" class="btn btn-neutral float-left" title="CSC Lab 3: Analysis of Map-Reduce Performance" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Blake Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

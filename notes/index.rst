@@ -17,6 +17,8 @@ Welcome to Blake's Distributed Computing Notes
    grpc/grpc.rst
    labs/lab2.rst
    ./labs/lab3/lab3report.rst
+   ./chubby.rst
+
 
 
 

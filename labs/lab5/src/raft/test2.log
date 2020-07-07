@@ -1,0 +1,257 @@
+Test (2A): initial election ...
+2020/06/20 22:24:27 setting election timeout at  0
+2020/06/20 22:24:27 setting election timeout at  2
+2020/06/20 22:24:27 setting election timeout at  1
+2020/06/20 22:24:27 requesting votes for Node  2
+2020/06/20 22:24:27 Casting vode for node  2  at node  2
+2020/06/20 22:24:27 collecting votes at  2
+2020/06/20 22:24:27 revoking leadership from  0
+2020/06/20 22:24:27 Casting vode for node  2  at node  0
+2020/06/20 22:24:27 Casting vode for node  2  at node  2
+2020/06/20 22:24:27 0   0   0
+2020/06/20 22:24:27 revoking leadership from  1
+2020/06/20 22:24:27 Casting vode for node  2  at node  1
+2020/06/20 22:24:27 1   0   0
+2020/06/20 22:24:27 Won election at node  2
+2020/06/20 22:24:27 requesting votes for Node  0
+2020/06/20 22:24:27 Casting vode for node  0  at node  0
+2020/06/20 22:24:27 collecting votes at  0
+2020/06/20 22:24:27 revoking leadership from  2
+2020/06/20 22:24:27 Casting vode for node  0  at node  2
+2020/06/20 22:24:27 revoking leadership from  1
+2020/06/20 22:24:27 Casting vode for node  0  at node  1
+2020/06/20 22:24:27 Casting vode for node  0  at node  0
+2020/06/20 22:24:27 0   0   0
+2020/06/20 22:24:27 1   0   0
+2020/06/20 22:24:27 Won election at node  0
+2020/06/20 22:24:27 setting election timeout at  2
+2020/06/20 22:24:27 state requested from  0  isLeader:  true term:  2
+2020/06/20 22:24:27 state requested from  1  isLeader:  false term:  2
+2020/06/20 22:24:27 state requested from  2  isLeader:  false term:  2
+2020/06/20 22:24:27 state requested from  0  isLeader:  true term:  2
+2020/06/20 22:24:27 state requested from  1  isLeader:  false term:  2
+2020/06/20 22:24:27 state requested from  2  isLeader:  false term:  2
+2020/06/20 22:24:28 requesting votes for Node  1
+2020/06/20 22:24:28 Casting vode for node  1  at node  1
+2020/06/20 22:24:28 collecting votes at  1
+2020/06/20 22:24:28 Casting vode for node  1  at node  1
+2020/06/20 22:24:28 0   0   0
+2020/06/20 22:24:28 revoking leadership from  2
+2020/06/20 22:24:28 Casting vode for node  1  at node  2
+2020/06/20 22:24:28 1   0   0
+2020/06/20 22:24:28 Won election at node  1
+2020/06/20 22:24:28 revoking leadership from  0
+2020/06/20 22:24:28 Casting vode for node  1  at node  0
+2020/06/20 22:24:28 setting election timeout at  0
+2020/06/20 22:24:28 heartbeat received at  0
+2020/06/20 22:24:28 heartbeat received at  2
+2020/06/20 22:24:28 setting election timeout at  2
+2020/06/20 22:24:28 heartbeat received at  0
+2020/06/20 22:24:28 heartbeat received at  2
+2020/06/20 22:24:28 setting election timeout at  0
+2020/06/20 22:24:28 heartbeat received at  0
+2020/06/20 22:24:28 heartbeat received at  2
+2020/06/20 22:24:28 setting election timeout at  0
+2020/06/20 22:24:28 setting election timeout at  2
+2020/06/20 22:24:28 heartbeat received at  0
+2020/06/20 22:24:28 heartbeat received at  2
+2020/06/20 22:24:28 setting election timeout at  2
+2020/06/20 22:24:28 setting election timeout at  0
+2020/06/20 22:24:29 requesting votes for Node  0
+2020/06/20 22:24:29 Casting vode for node  0  at node  0
+2020/06/20 22:24:29 collecting votes at  0
+2020/06/20 22:24:29 revoking leadership from  2
+2020/06/20 22:24:29 Casting vode for node  0  at node  2
+2020/06/20 22:24:29 Casting vode for node  0  at node  0
+2020/06/20 22:24:29 0   0   0
+2020/06/20 22:24:29 1   0   0
+2020/06/20 22:24:29 Won election at node  0
+2020/06/20 22:24:29 revoking leadership from  1
+2020/06/20 22:24:29 Casting vode for node  0  at node  1
+2020/06/20 22:24:29 setting election timeout at  1
+2020/06/20 22:24:29 requesting votes for Node  2
+2020/06/20 22:24:29 Casting vode for node  2  at node  2
+2020/06/20 22:24:29 collecting votes at  2
+2020/06/20 22:24:29 revoking leadership from  0
+2020/06/20 22:24:29 Casting vode for node  2  at node  0
+2020/06/20 22:24:29 revoking leadership from  1
+2020/06/20 22:24:29 Casting vode for node  2  at node  1
+2020/06/20 22:24:29 Casting vode for node  2  at node  2
+2020/06/20 22:24:29 0   0   0
+2020/06/20 22:24:29 1   0   0
+2020/06/20 22:24:29 Won election at node  2
+2020/06/20 22:24:29 setting election timeout at  0
+2020/06/20 22:24:29 heartbeat received at  0
+2020/06/20 22:24:29 heartbeat received at  1
+2020/06/20 22:24:29 setting election timeout at  0
+2020/06/20 22:24:29 setting election timeout at  1
+2020/06/20 22:24:29 requesting votes for Node  0
+2020/06/20 22:24:29 Casting vode for node  0  at node  0
+2020/06/20 22:24:29 revoking leadership from  1
+2020/06/20 22:24:29 Casting vode for node  0  at node  1
+2020/06/20 22:24:29 collecting votes at  0
+2020/06/20 22:24:29 revoking leadership from  2
+2020/06/20 22:24:29 Casting vode for node  0  at node  2
+2020/06/20 22:24:29 0   0   0
+2020/06/20 22:24:29 setting election timeout at  2
+2020/06/20 22:24:29 Casting vode for node  0  at node  0
+2020/06/20 22:24:29 1   0   0
+2020/06/20 22:24:29 Won election at node  0
+2020/06/20 22:24:29 heartbeat received at  2
+2020/06/20 22:24:29 heartbeat received at  1
+2020/06/20 22:24:29 setting election timeout at  1
+2020/06/20 22:24:29 setting election timeout at  2
+2020/06/20 22:24:29 state requested from  0  isLeader:  true term:  6
+2020/06/20 22:24:29 state requested from  1  isLeader:  false term:  6
+2020/06/20 22:24:29 state requested from  2  isLeader:  false term:  6
+warning: term changed even though there were no failures2020/06/20 22:24:29 heartbeat received at  1
+2020/06/20 22:24:29 heartbeat received at  2
+2020/06/20 22:24:29 setting election timeout at  2
+2020/06/20 22:24:30 setting election timeout at  1
+2020/06/20 22:24:30 heartbeat received at  1
+2020/06/20 22:24:30 heartbeat received at  2
+2020/06/20 22:24:30 setting election timeout at  1
+2020/06/20 22:24:30 setting election timeout at  2
+2020/06/20 22:24:30 requesting votes for Node  1
+2020/06/20 22:24:30 Casting vode for node  1  at node  1
+2020/06/20 22:24:30 collecting votes at  1
+2020/06/20 22:24:30 Casting vode for node  1  at node  1
+2020/06/20 22:24:30 0   0   0
+2020/06/20 22:24:30 revoking leadership from  2
+2020/06/20 22:24:30 Casting vode for node  1  at node  2
+2020/06/20 22:24:30 1   0   0
+2020/06/20 22:24:30 Won election at node  1
+2020/06/20 22:24:30 revoking leadership from  0
+2020/06/20 22:24:30 Casting vode for node  1  at node  0
+2020/06/20 22:24:30 setting election timeout at  0
+2020/06/20 22:24:30 requesting votes for Node  2
+2020/06/20 22:24:30 Casting vode for node  2  at node  2
+2020/06/20 22:24:30 collecting votes at  2
+2020/06/20 22:24:30 Casting vode for node  2  at node  2
+2020/06/20 22:24:30 revoking leadership from  0
+2020/06/20 22:24:30 Casting vode for node  2  at node  0
+2020/06/20 22:24:30 revoking leadership from  1
+2020/06/20 22:24:30 Casting vode for node  2  at node  1
+2020/06/20 22:24:30 setting election timeout at  1
+2020/06/20 22:24:30 0   0   0
+2020/06/20 22:24:30 1   0   0
+2020/06/20 22:24:30 Won election at node  2
+2020/06/20 22:24:30 state requested from  0  isLeader:  false term:  8
+2020/06/20 22:24:30 state requested from  1  isLeader:  false term:  8
+2020/06/20 22:24:30 state requested from  2  isLeader:  true term:  8
+  ... Passed --   3.0  3   40    3340    0
+2020/06/20 22:24:30 0  has been killed
+2020/06/20 22:24:30 revoking leadership from  0
+2020/06/20 22:24:30 1  has been killed
+2020/06/20 22:24:30 revoking leadership from  1
+2020/06/20 22:24:30 heartbeat received at  0
+2020/06/20 22:24:30 heartbeat received at  1
+2020/06/20 22:24:30 2  has been killed
+2020/06/20 22:24:30 revoking leadership from  2
+2020/06/20 22:24:30 setting election timeout at  2
+2020/06/20 22:24:30 setting election timeout at  0
+2020/06/20 22:24:30 setting election timeout at  1
+Test (2A): election after network failure ...
+2020/06/20 22:24:30 setting election timeout at  2
+2020/06/20 22:24:30 setting election timeout at  0
+2020/06/20 22:24:30 requesting votes for Node  1
+2020/06/20 22:24:30 Casting vode for node  1  at node  1
+2020/06/20 22:24:30 collecting votes at  1
+2020/06/20 22:24:30 0   0   0
+2020/06/20 22:24:30 0   1   0
+2020/06/20 22:24:30 0   2   1
+2020/06/20 22:24:31 requesting votes for Node  1
+2020/06/20 22:24:31 Casting vode for node  1  at node  1
+2020/06/20 22:24:31 collecting votes at  1
+2020/06/20 22:24:31 revoking leadership from  2
+2020/06/20 22:24:31 Casting vode for node  1  at node  1
+2020/06/20 22:24:31 revoking leadership from  0
+2020/06/20 22:24:31 Casting vode for node  1  at node  0
+2020/06/20 22:24:31 0   0   0
+2020/06/20 22:24:31 Casting vode for node  1  at node  2
+2020/06/20 22:24:31 1   0   0
+2020/06/20 22:24:31 Won election at node  1
+2020/06/20 22:24:31 requesting votes for Node  2
+2020/06/20 22:24:31 Casting vode for node  2  at node  2
+2020/06/20 22:24:31 collecting votes at  2
+2020/06/20 22:24:31 revoking leadership from  0
+2020/06/20 22:24:31 Casting vode for node  2  at node  2
+2020/06/20 22:24:31 Casting vode for node  2  at node  0
+2020/06/20 22:24:31 0   0   0
+2020/06/20 22:24:31 1   0   0
+2020/06/20 22:24:31 Won election at node  2
+2020/06/20 22:24:31 revoking leadership from  1
+2020/06/20 22:24:31 Casting vode for node  2  at node  1
+2020/06/20 22:24:31 setting election timeout at  1
+2020/06/20 22:24:31 requesting votes for Node  0
+2020/06/20 22:24:31 Casting vode for node  0  at node  0
+2020/06/20 22:24:31 collecting votes at  0
+2020/06/20 22:24:31 revoking leadership from  2
+2020/06/20 22:24:31 Casting vode for node  0  at node  2
+2020/06/20 22:24:31 revoking leadership from  1
+2020/06/20 22:24:31 setting election timeout at  2
+2020/06/20 22:24:31 0   0   0
+2020/06/20 22:24:31 Casting vode for node  0  at node  1
+2020/06/20 22:24:31 Casting vode for node  0  at node  0
+2020/06/20 22:24:31 1   0   0
+2020/06/20 22:24:31 Won election at node  0
+2020/06/20 22:24:31 state requested from  0  isLeader:  true term:  3
+2020/06/20 22:24:31 state requested from  1  isLeader:  false term:  3
+2020/06/20 22:24:31 state requested from  2  isLeader:  false term:  3
+2020/06/20 22:24:31 META: disconnect leader 1
+2020/06/20 22:24:31 requesting votes for Node  0
+2020/06/20 22:24:31 Casting vode for node  0  at node  0
+2020/06/20 22:24:31 collecting votes at  0
+2020/06/20 22:24:31 0   0   0
+2020/06/20 22:24:31 0   1   0
+2020/06/20 22:24:31 0   2   1
+2020/06/20 22:24:31 node killed , 0
+2020/06/20 22:24:31 node killed , 1
+2020/06/20 22:24:31 node killed , 2
+2020/06/20 22:24:31 state requested from  1  isLeader:  false term:  3
+2020/06/20 22:24:31 state requested from  2  isLeader:  false term:  3
+2020/06/20 22:24:32 state requested from  1  isLeader:  false term:  3
+2020/06/20 22:24:32 state requested from  2  isLeader:  false term:  3
+2020/06/20 22:24:32 node killed , 0
+2020/06/20 22:24:32 node killed , 2
+2020/06/20 22:24:32 node killed , 1
+2020/06/20 22:24:32 state requested from  1  isLeader:  false term:  3
+2020/06/20 22:24:32 state requested from  2  isLeader:  false term:  3
+2020/06/20 22:24:33 state requested from  1  isLeader:  false term:  3
+2020/06/20 22:24:33 state requested from  2  isLeader:  false term:  3
+2020/06/20 22:24:33 node killed , 0
+2020/06/20 22:24:33 node killed , 2
+2020/06/20 22:24:33 node killed , 1
+2020/06/20 22:24:33 state requested from  1  isLeader:  false term:  3
+2020/06/20 22:24:33 state requested from  2  isLeader:  false term:  3
+2020/06/20 22:24:34 state requested from  1  isLeader:  false term:  3
+2020/06/20 22:24:34 state requested from  2  isLeader:  false term:  3
+2020/06/20 22:24:34 node killed , 0
+2020/06/20 22:24:34 node killed , 1
+2020/06/20 22:24:34 node killed , 2
+2020/06/20 22:24:34 state requested from  1  isLeader:  false term:  3
+2020/06/20 22:24:34 state requested from  2  isLeader:  false term:  3
+2020/06/20 22:24:35 state requested from  1  isLeader:  false term:  3
+2020/06/20 22:24:35 state requested from  2  isLeader:  false term:  3
+2020/06/20 22:24:35 node killed , 0
+2020/06/20 22:24:35 node killed , 2
+2020/06/20 22:24:35 node killed , 1
+2020/06/20 22:24:35 state requested from  1  isLeader:  false term:  3
+2020/06/20 22:24:35 state requested from  2  isLeader:  false term:  3
+2020/06/20 22:24:36 state requested from  1  isLeader:  false term:  3
+2020/06/20 22:24:36 state requested from  2  isLeader:  false term:  3
+2020/06/20 22:24:36 0  has been killed
+2020/06/20 22:24:36 revoking leadership from  0
+2020/06/20 22:24:36 setting election timeout at  0
+2020/06/20 22:24:36 node killed , 0
+2020/06/20 22:24:36 node killed , 1
+2020/06/20 22:24:36 node killed , 2
+2020/06/20 22:24:36 1  has been killed
+2020/06/20 22:24:36 revoking leadership from  1
+2020/06/20 22:24:36 2  has been killed
+2020/06/20 22:24:36 revoking leadership from  2
+--- FAIL: TestReElection2A (6.11s)
+    config.go:330: expected one leader, got none
+FAIL
+exit status 1
+FAIL	_/home/larbs/Documents/docs-school/csc/462/labs/lab5/src/raft	9.370s

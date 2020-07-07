@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Blake's Distributied Computing Notes
+Welcome to Blake's Distributed Computing Notes
 ==============================================================
 
 .. toctree::
@@ -15,6 +15,10 @@ Welcome to Blake's Distributied Computing Notes
    clock_exercise/clock_exercise.rst
    week2.rst
    grpc/grpc.rst
+   labs/lab2.rst
+   ./labs/lab3/lab3report.rst
+   ./chubby.rst
+
 
 
 
