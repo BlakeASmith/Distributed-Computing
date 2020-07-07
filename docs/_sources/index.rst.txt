@@ -13,11 +13,11 @@ Welcome to Blake's Distributed Computing Notes
    google_article.rst
    aws_beyondelevennines_talk.rst
    clock_exercise/clock_exercise.rst
-   week2.rst
    grpc/grpc.rst
    labs/lab2.rst
    ./labs/lab3/lab3report.rst
    ./chubby.rst
+   ./dsffap4.rst
 
 
 
