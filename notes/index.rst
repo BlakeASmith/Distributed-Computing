@@ -18,6 +18,7 @@ Welcome to Blake's Distributed Computing Notes
    ./labs/lab3/lab3report.rst
    ./chubby.rst
    ./dsffap4.rst
+   ./dsffap5.rst
 
 
 
