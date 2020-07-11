@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Summary of Chapter 5 &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Summary of Distributed Systems for Fun and Profit Chapter 4" href="dsffap4.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Distributied Computing Summer 2020
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="google_article.html">Google Article on Distributed Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aws_beyondelevennines_talk.html">Noes from AWS Beyond Eleven Nines Talk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clock_exercise/clock_exercise.html">Clock Exercise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grpc/grpc.html">Diggind in to the gRPC example code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labs/lab2.html">Lab 2: A Simplified Distributed Map Reduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labs/lab3/lab3report.html">CSC Lab 3: Analysis of Map-Reduce Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chubby.html">Summary of The Chubby lock service for loosely-coupled distributed systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dsffap4.html">Summary of Distributed Systems for Fun and Profit Chapter 4</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Summary of Chapter 5</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#question-critique">Question/Critique</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Distributied Computing Summer 2020</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Summary of Chapter 5</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/dsffap5.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="summary-of-chapter-5">
+<h1>Summary of Chapter 5<a class="headerlink" href="#summary-of-chapter-5" title="Permalink to this headline">¶</a></h1>
+<p>See the full book here: <a class="reference external" href="http://book.mixu.net/distsys/single-page.html#eventual">http://book.mixu.net/distsys/single-page.html#eventual</a></p>
+<p>Chapter 4 of this book covered replication techniques where <strong>Single-copy consistency</strong> (replicas must not
+diverge) is required.
+It’s possible to do much more without that requirement, and this chapter covers those options. As was discussed in
+the section on the CAP theorem, it is not possible to keep consistency, availability, and partition tolerance all at the
+same time. Thus, by allowing for some divergence between replicas, we can improve the availability of
+our systems under a network partition.</p>
+<p>What we strive for in this category of replication strategies is <strong>eventual consistency</strong> where nodes may diverge
+for sometime, but will be able to sort out the differences once they have contact. We also have 2 options for <strong>eventual consistency</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Eventual Consistency with probabilistic guarantees</dt>
+<dd class="field-odd"><p>Write conflicts are eventually detected and resolved, but it is not always true
+that the newest value will be used. AWS Dynamo is an example of this type of system.</p>
+</dd>
+<dt class="field-even">Eventual Consistency with strong guarantees</dt>
+<dd class="field-even"><p>Write conflicts are eventually detected and resolved while maintaining a correct
+sequential order of execution. That is, the newest data is always correctly chosen
+when resolving any given write conflict. All replicas will eventually agree, given
+that they all receive the same information, regardless of what order the writes were
+received.</p>
+</dd>
+</dl>
+<p>One helper in achieving <strong>Eventual Consistency with strong guarantees</strong> is a <strong>Convergent Replicated
+Data Type</strong> (CRDT). A data type is a CRDT if it guarantees convergence to the same value despite the order of
+operations. That is, regardless of what order messages come in (and thus operations on the CRDT), the end result will
+be the same as long as the set of operations is the same.</p>
+<p>Another idea is <strong>Consistency as Logical Monotonicity</strong> (CALM).  <strong>Logically Monotonic</strong> programs are guaranteed to be
+eventually consistent as, by definition, the order of operations is not important.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Logical Monotonicity</dt>
+<dd class="field-odd"><p>If A is a consequence of a set of premises {B}, then A can be inferred by any superset of {B}</p>
+</dd>
+</dl>
+<p>What this means for us, is that <em>new information</em> cannot invalidated conclusions drawn from previous information. Thus
+information (commands) can be provided in any order, and as long as all of the information is <em>eventually</em> provided, the
+same results will be reached (<em>eventual consistency</em>)</p>
+<p>The important qualities for CRDT’s are the following:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Idempotent</dt>
+<dd class="field-odd"><p>Applying the same operation twice using the same operand(s) is the same as applying it only once <span class="math notranslate nohighlight">\(A+A=A\)</span>.
+An example of this property is adding to a set, if the element is already in the set then set addition of that
+element is a NOP.</p>
+</dd>
+<dt class="field-even">Associative</dt>
+<dd class="field-even"><p>This is the property that the order in which operations are applied to a set of operands is not important
+as long as the <strong>operands</strong> remain in the same order. This is important for a CRDT since the order in which the operands
+arrive is undetermined. As such it is possible that a replica would apply the operations in a different order without
+re-arranging the operands. For example consider <span class="math notranslate nohighlight">\(A+B+C\)</span> where ‘+’ is some associative binary operation. Suppose
+that the replica first receives B and C, it then knows to apply <span class="math notranslate nohighlight">\(B+C\)</span>. Once the replica receives the operand A it
+would then be able to apply A+(B+C). Since the order of the operands coming in to the replica is undetermined, the order
+of the operations which will be performed on those operands is also undetermined. Thus associativity is a requirement
+for a CRDT</p>
+</dd>
+<dt class="field-odd">Commutative</dt>
+<dd class="field-odd"><p>Of all the properties this one seems the most obvious. Since the order that any replica will receive the commands is
+undetermined, it must be able to apply those commands in whichever order it receives them. Else some more complicated
+communications would have to go on to prevent illegal operations, and the data type would not be a CRDT.</p>
+</dd>
+</dl>
+<p>The author uses Amazon’s Dynamo as a lens to explore the following concepts:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Consistent Hashing</dt>
+<dd class="field-odd"><p>Using a hash function to map keys to sets of  nodes where they will be stored. This
+allows the client to know which subset of all the nodes will have the value for the key
+they are looking for. Without consistent hashing, the client would need to poll
+each group of nodes to see if they had a particular key.</p>
+</dd>
+</dl>
+<p>For context, a <strong>quorum</strong> is the minimum number of members of a deliberative assembly necessary to
+conduct the business of that group. In the case of a distributed system, it is the number of nodes
+(votes) required to commit a transaction.</p>
+<dl class="field-list">
+<dt class="field-odd">Strict Quorums</dt>
+<dd class="field-odd"><p>A <strong>strict quorum system</strong> has the property that any two <strong>quorums</strong> (groups of nodes involved in
+a voting decision) will always overlap. Requiring a majority of nodes achieves this, as there must have been
+a node involved in both decisions). Because of this overlapping node, we can be sure that there are no two
+transactions that result in conflicting data. This is because the vote from that single node which is a part
+of both quorums is always required to reach a majority. If the transaction being considered is not compatible
+with the previous transaction that node will simply not vote in favor, making it impossible to commit an inconsistent
+transaction</p>
+</dd>
+<dt class="field-even">Partial Quorums</dt>
+<dd class="field-even"><p>In a <strong>partial quorum</strong> a majority vote is not required. This means it is possible for there to be two
+independent quorums which could commit conflicting transactions. Often, the user can choose a number W
+(number of nodes required to agree on a WRITE) and a number R (the number of nodes contacted upon a READ).</p>
+<p>Out of these choices come the following results</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>R=1, W=N: Fast reads, slow (but consistent) writes</dt><dd><ul>
+<li><p>This is total consensus, there will be no conflicts at write time</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>R=N, W=1: Fast writes, slow reads. Conflicts will be sorted at read time</p></li>
+<li><p>R=N/2, W=N/2+1: Favorable for both reading and writing. When reading there is a guarantee that
+one of the nodes contacted would have been involved in any given write transaction, thus the conflicts
+will be sorted at read time.</p></li>
+</ul>
+<p>The property that R + W &gt; N provides strong consistency PROVIDED that the nodes
+in the set N never change.</p>
+<p>Systems like Dynamo will swap out nodes when they fail, thus they can only provide strong
+consistency probabilistically.</p>
+</dd>
+</dl>
+<div class="section" id="question-critique">
+<h2>Question/Critique<a class="headerlink" href="#question-critique" title="Permalink to this headline">¶</a></h2>
+<p>I really enjoyed the chapter and do not have any major criticisms. I was however left wanting to know more
+specifics about CRDTs and what common types of CRDTs are available, as well as library implementations of those
+types.</p>
+<p>I recommend having a look at the following sources to get a better handle on CRDTs</p>
+<p>1. <a class="reference external" href="https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type">https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type</a>
+3. <a class="reference external" href="https://crdt.tech/implementations">https://crdt.tech/implementations</a>
+2. <a class="reference external" href="https://www.microsoft.com/en-us/research/video/strong-eventual-consistency-and-conflict-free-replicated-data-types/?from=http%3A%2F%2Fresearch.microsoft.com%2Fapps%2Fvideo%2Fdl.aspx%3Fid%3D153540">https://www.microsoft.com/en-us/research/video/strong-eventual-consistency-and-conflict-free-replicated-data-types/?from=http%3A%2F%2Fresearch.microsoft.com%2Fapps%2Fvideo%2Fdl.aspx%3Fid%3D153540</a>
+3. <a class="reference external" href="https://www.youtube.com/watch?v=em9zLzM8O7c&amp;t=358s">https://www.youtube.com/watch?v=em9zLzM8O7c&amp;t=358s</a>
+4. <a class="reference external" href="https://logux.io/">https://logux.io/</a></p>
+<p>This Github page has a great collection of CRDT resouces</p>
+<p><a class="reference external" href="https://github.com/alangibson/awesome-crdt">https://github.com/alangibson/awesome-crdt</a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="dsffap4.html" class="btn btn-neutral float-left" title="Summary of Distributed Systems for Fun and Profit Chapter 4" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Blake Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
