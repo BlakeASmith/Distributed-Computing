@@ -19,6 +19,7 @@ Welcome to Blake's Distributed Computing Notes
    ./chubby.rst
    ./dsffap4.rst
    ./dsffap5.rst
+   ./project_critiques.rst
 
 
 
