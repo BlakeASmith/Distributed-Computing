@@ -54,6 +54,7 @@ func Make(peers []*labrpc.ClientEnd, me int,
 
 	rf._log = make([]LogEntry, 0)
 
+	rf.log("initalizing")
 	rf.follower()
 
 	// initialize from state persisted before a crash
@@ -86,7 +87,7 @@ func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *Reques
 func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	if rf.dead == 1 { return }
 	//rf.log("recieved a vote request from ", args.ID)
-	rf.mu.Lock()
+	//rf.mu.Lock()
 
 	if args.Term > rf.currentTerm{
 		rf.currentTerm = args.Term
@@ -95,9 +96,10 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 		return
 	}
 
-	rf.mu.Unlock()
+	//rf.mu.Unlock()
+	rf.log("vote request from", args.ID)
 	rf.follower()
-	rf.mu.Lock()
+	//rf.mu.Lock()
 
 	if rf.votedFor == -1 || rf.votedFor == args.ID {
 		rf.votedFor = args.ID
@@ -111,33 +113,37 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 		}
 	}
 
-	rf.mu.Unlock()
+	//rf.mu.Unlock()
 }
 
 // perform an action after a specified timeout
 // the action will not be perfimed if the given ID changes
 func timeout(id int, currentID *int, duration time.Duration, doThing func() string) {
+	//log.Println("STARTING SLEEP ",duration ,  time.Now())
 	time.Sleep(duration)
 	if id == *currentID{
-		log.Println("DOING THING ")
+		//log.Println("TIMER WENT OFF", time.Now())
 		doThing()
 	}
 }
 
 func (rf *Raft) heartbeat() string {
-	//if rf.killed() { return }
-	rf.log("BEATING")
+	if rf.killed() { return "HEARTBEAT" }
 
 	for id, server := range rf.peers{
 		if id != rf.me{
-			server.Call(
-				"Raft.AppendEntries",
-				&AppendEntryArgs{
-					Term: rf.currentTerm,
-					LeaderID: rf.currentLeader,
-					LeaderCommitIndex: rf.commitInd,
-				},&AppendEntryReply{},
-			)
+			go func () {
+				ok := server.Call(
+					"Raft.AppendEntries",
+					&AppendEntryArgs{
+						Term: rf.currentTerm,
+						LeaderID: rf.currentLeader,
+						LeaderCommitIndex: rf.commitInd,
+					},&AppendEntryReply{},
+				)
+				if !ok { rf.log("failed to send heartbeat to ", id)
+				} else {rf.log("Sent heartbeat to ", id) }
+			}()
 		}
 	}
 
@@ -146,13 +152,13 @@ func (rf *Raft) heartbeat() string {
 }
 
 func (rf *Raft) setHeartbeat(){
-	duration := time.Duration(50 + rand.Intn(150)) * time.Millisecond
+	duration := time.Duration(50) * time.Millisecond
 	timeout(rf.heartbeatID, &rf.heartbeatID, duration, rf.heartbeat)
 }
 
 func (rf *Raft) leader(){
 	if rf.dead == 1 { return }
-	rf.mu.Lock()
+	//rf.mu.Lock()
 
 	rf.log("in leader state")
 	rf.isleader = true
@@ -168,19 +174,19 @@ func (rf *Raft) leader(){
 
 	rf.matchIndex = make([]int, len(rf.peers))
 
-	rf.mu.Unlock()
+	//rf.mu.Unlock()
 	go rf.setHeartbeat()
 }
 
 func (rf *Raft) candidate() string{
 	//if rf.killed() { rf.log("KILL") ; return }
-	rf.mu.Lock()
-	rf.log("in candiate state")
+	//rf.mu.Lock()
+	rf.log("in candiate state", time.Now())
 	rf.currentTerm += 1
 	rf.votes = 0
 	rf.votes += 1 // vote for myself
 	rf.votedFor = rf.me
-	rf.mu.Unlock()
+	//rf.mu.Unlock()
 
 	rf.electionID += 1 // cancel any previous timers
 
@@ -207,14 +213,14 @@ func (rf *Raft) candidate() string{
 
 		reply := RequestVoteReply{}
 		rf.sendRequestVote(server, &args, &reply)
-		rf.mu.Lock()
+		//rf.mu.Lock()
 		if reply.Vote {
 			rf.votes += 1
 		}
-		rf.mu.Unlock()
+		//rf.mu.Unlock()
 	}
 
-	rf.electionID += 1 // end candidacy timer
+	//rf.electionID += 1 // end candidacy timer
 
 	if rf.votes >= (len(rf.peers)/2 + len(rf.peers) % 2){
 		rf.log("ELECTED with ", rf.votes, " votes out of ", len(rf.peers))
@@ -226,27 +232,26 @@ func (rf *Raft) candidate() string{
 }
 
 func (rf *Raft) receiveHeartbeat(args *AppendEntryArgs) {
-	rf.log("recieved hearbeat")
+	rf.log("recieved hearbeat from", args.LeaderID ,", convert to follower", time.Now())
+	rf.follower()
+	//rf.mu.Lock()
 	rf.currentLeader = args.LeaderID
-	rf.mu.Lock()
 	if args.Term >= rf.currentTerm{
 		rf.currentTerm = args.Term
 	}
-	rf.mu.Unlock()
-	rf.follower()
+	//rf.mu.Unlock()
 }
 
 func (rf *Raft) electionTimer(){
 	rf.electionID += 1 // cancel any previous timers
-	duration := time.Duration(400 + rand.Intn(200)) * time.Millisecond
+	duration := time.Duration(150 + rand.Intn(150)) * time.Millisecond
 	go timeout(rf.electionID, &rf.electionID, duration, rf.candidate)
 }
 
 func (rf *Raft) follower() string{
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
-	if rf.dead == 1 { return "FOLLOWER" }
-	rf.log("in follower state")
+	//rf.mu.Lock()
+	//defer rf.mu.Unlock()
+	rf.log("in follower state", time.Now())
 	rf.isleader = false
 	rf.heartbeatID += 1 // cancels the heartbeat if the node was a leader
 	rf.votedFor = -1 // ready to vote again
@@ -256,8 +261,8 @@ func (rf *Raft) follower() string{
 }
 
 func (rf *Raft) GetState() (int, bool) {
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
+	//rf.mu.Lock()
+	//defer rf.mu.Unlock()
 	rf.log("STATE: ", "term: ", rf.currentTerm, "isleader: ", rf.isleader)
 	return rf.currentTerm, rf.isleader
 }
@@ -265,10 +270,10 @@ func (rf *Raft) GetState() (int, bool) {
 
 
 func (rf *Raft) Kill() {
-	rf.log("KILLED")
+	rf.log("KILLED, convert to follower")
 	rf.follower()
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
+	//rf.mu.Lock()
+	//defer rf.mu.Unlock()
 	rf.electionID += 1
 	atomic.StoreInt32(&rf.dead, 1)
 }
@@ -305,10 +310,10 @@ type AppendEntryReply struct {
 }
 
 func writeToLog(rf *Raft, entries []LogEntry){
-	rf.log("wrote to logs: ", len(entries))
 	for _, entry := range entries {
 		rf._log = append(rf._log, entry)
 	}
+	rf.log("wrote to logs: ", rf._log, entries)
 }
 
 func commitLogs(rf *Raft, start int, end int){
@@ -318,7 +323,7 @@ func commitLogs(rf *Raft, start int, end int){
 			CommandValid: true,
 			CommandIndex: rf.commitInd+1,
 		}
-		rf.log("committing commandIndex ", applymsg.CommandIndex)
+		rf.log("committing commandIndex ", applymsg.CommandIndex, time.Now())
 		rf.apply <- applymsg
 		rf.commitInd += 1
 	}
@@ -356,18 +361,18 @@ func (rf *Raft) sendEntries(args AppendEntryArgs, id int, collect chan bool) {
 				success = reply.Success
 				if !success { rf.nextIndex[id]-- }
 			}
-			//rf.log("collected result from ", id)
+			rf.log("collected result from ", id)
 			rf.nextIndex[id] = loglen
 			collect <- success
 }
 
 func broadcastCommit(rf *Raft) {
-	//for id, server := range rf.peers {
-		//if id == rf.me { continue }
-		//server.Call("Raft.AppendEntries", &AppendEntryArgs{
-			//LeaderCommitIndex: rf.commitInd,
-		//}, &AppendEntryReply{})
-	//}
+	for id, server := range rf.peers {
+		if id == rf.me { continue }
+		server.Call("Raft.AppendEntries", &AppendEntryArgs{
+			LeaderCommitIndex: rf.commitInd,
+		}, &AppendEntryReply{})
+	}
 }
 
 func collectAppendResults (rf *Raft, collect chan bool) {
@@ -380,6 +385,8 @@ func collectAppendResults (rf *Raft, collect chan bool) {
 			rf.log("MAJORITY")
 			//go broadcastCommit(rf)
 			commitLogs(rf, rf.commitInd, len(rf._log)) // COMMIT
+			rf.heartbeatID++
+			go rf.setHeartbeat()
 			break
 		}
 	}
@@ -400,10 +407,13 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	collect := make(chan bool)
 	args := rf.setUpAppendEntriesArgs()
 
-	for id, _ := range rf.peers {
-		if id == rf.me { continue }
-		go rf.sendEntries(args[id], id, collect)
-	}
+	go func() {
+		for id, _ := range rf.peers {
+			if id == rf.me { continue }
+			go rf.sendEntries(args[id], id, collect)
+		}
+	}()
+
 
 	go collectAppendResults(rf, collect)
 
@@ -419,30 +429,35 @@ func deleteEntriesFromLog(rf *Raft, startInd int){
 
 func (rf *Raft) AppendEntries(leader *AppendEntryArgs, reply *AppendEntryReply) {
 	//if rf.killed() { return }
-	rf.log(leader.LeaderID, rf.votedFor)
 
 	go rf.receiveHeartbeat(leader)
 
+
 	if leader.Term < rf.currentTerm {
 		rf.log("Inconsistent term ", leader.Term, rf.currentTerm)
-		return
 	}
 
-	if leader.PrevLogIndex != -1 && len(leader.Entries) > 0 && rf._log[leader.PrevLogIndex].Term != leader.PrevLogTerm {
-		deleteEntriesFromLog(rf, leader.PrevLogIndex)
+	//if leader.PrevLogIndex >= len(rf._log){
+		//return
+	//}
+
+	if leader.PrevLogIndex >= 0 && leader.PrevLogIndex < len(rf._log) && len(leader.Entries) > 0 && rf._log[leader.PrevLogIndex].Term != leader.PrevLogTerm {
+		go deleteEntriesFromLog(rf, leader.PrevLogIndex)
 		return
 	} else {
 		writeToLog(rf, leader.Entries)
 		reply.Success = true
 	}
 
+
 	if leader.LeaderCommitIndex > rf.commitInd {
 		if len(rf._log)-1 < leader.LeaderCommitIndex{
-			commitLogs(rf, rf.commitInd, len(rf._log))
+			go commitLogs(rf, rf.commitInd, len(rf._log))
 		} else {
-			commitLogs(rf, rf.commitInd, leader.LeaderCommitIndex)
+			go commitLogs(rf, rf.commitInd, leader.LeaderCommitIndex)
 		}
 	}
+
 }
 
 

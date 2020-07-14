@@ -21,6 +21,7 @@ Welcome to Blake's Distributed Computing Notes
    ./dsffap5.rst
    ./project_critiques.rst
    ./cap_critiqe.rst
+   ./wc.rst
 
 
 

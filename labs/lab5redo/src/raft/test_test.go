@@ -159,13 +159,14 @@ func TestFailAgree2B(t *testing.T) {
 
 	// the leader and remaining follower should be
 	// able to agree despite the disconnected follower.
-	fmt.Println("META: DISCONNECT A FOLLOWER")
+	fmt.Println("META: DISCONNECT A FOLLOWER, ", (leader+1) % servers)
 	cfg.one(102, servers-1, false)
 	cfg.one(103, servers-1, false)
 	time.Sleep(RaftElectionTimeout)
 	cfg.one(104, servers-1, false)
 	cfg.one(105, servers-1, false)
 
+	fmt.Println("META: RECONNECT A FOLLOWER", (leader+1) % servers)
 	// re-connect
 	cfg.connect((leader + 1) % servers)
 
