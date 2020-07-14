@@ -1,0 +1,26 @@
+Test (2A): initial election ...
+2020/07/12 18:34:27 0 :  [starting election on term  1]
+2020/07/12 18:34:27 2 :  [voting for  0  on term  1]
+2020/07/12 18:34:27 1 :  [voting for  0  on term  1]
+2020/07/12 18:34:27 0 :  [VICTORY]
+  ... Passed --   3.1  3  116   30686    0
+2020/07/12 18:34:30 0 :  [KILLED]
+2020/07/12 18:34:30 1 :  [KILLED]
+2020/07/12 18:34:30 2 :  [KILLED]
+Test (2A): election after network failure ...
+2020/07/12 18:34:30 2 :  [starting election on term  1]
+2020/07/12 18:34:30 1 :  [voting for  2  on term  1]
+2020/07/12 18:34:30 0 :  [voting for  2  on term  1]
+2020/07/12 18:34:30 2 :  [VICTORY]
+2020/07/12 18:34:30 1 :  [starting election on term  2]
+2020/07/12 18:34:30 0 :  [already voted  on term  2]
+2020/07/12 18:34:30 0 :  [starting election on term  3]
+2020/07/12 18:34:30 1 :  [already voted  on term  3]
+2020/07/12 18:34:35 0 :  [KILLED]
+2020/07/12 18:34:35 1 :  [KILLED]
+2020/07/12 18:34:35 2 :  [KILLED]
+--- FAIL: TestReElection2A (5.57s)
+    config.go:331: expected one leader, got none
+FAIL
+exit status 1
+FAIL	_/home/larbs/Documents/docs-school/csc/462/labs/lab5lastredo/src/raft	8.652s

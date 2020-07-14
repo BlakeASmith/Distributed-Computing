@@ -1,0 +1,283 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Summary of A Critique of the CAP Theorem &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Project Phase 1 Critiques" href="project_critiques.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Distributied Computing Summer 2020
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="google_article.html">Google Article on Distributed Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aws_beyondelevennines_talk.html">Noes from AWS Beyond Eleven Nines Talk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clock_exercise/clock_exercise.html">Clock Exercise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grpc/grpc.html">Diggind in to the gRPC example code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labs/lab2.html">Lab 2: A Simplified Distributed Map Reduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labs/lab3/lab3report.html">CSC Lab 3: Analysis of Map-Reduce Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chubby.html">Summary of The Chubby lock service for loosely-coupled distributed systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dsffap4.html">Summary of Distributed Systems for Fun and Profit Chapter 4</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dsffap5.html">Summary of Chapter 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project_critiques.html">Project Phase 1 Critiques</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Summary of A Critique of the CAP Theorem</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#questions-criticisms">Questions/Criticisms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#related-resources">Related Resources</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Distributied Computing Summer 2020</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Summary of A Critique of the CAP Theorem</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/cap_critiqe.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="summary-of-a-critique-of-the-cap-theorem">
+<h1>Summary of A Critique of the CAP Theorem<a class="headerlink" href="#summary-of-a-critique-of-the-cap-theorem" title="Permalink to this headline">¶</a></h1>
+<p>See the full paper at <a class="reference external" href="https://arxiv.org/pdf/1509.05393.pdf">https://arxiv.org/pdf/1509.05393.pdf</a></p>
+<p>This paper discusses some problems regarding the CAP theorem including
+the unclear distinction between <em>strong</em> and <em>eventual</em> consistency. It also
+presents some alternatives to CAP like a <em>delay sensitivity</em> framework.</p>
+<p>Some of the authors gripes with the CAP theorem include:</p>
+<dl class="field-list simple">
+<dt class="field-odd">No Maximum Latency</dt>
+<dd class="field-odd"><p>CAP’s definition of availability does not
+include an upper bound for latency. A system
+is considered available as long as it <em>eventually</em>
+responds. This is not consistent with the real world
+when there really is an upper bound on acceptable
+response times.</p>
+</dd>
+<dt class="field-even">Spectrum of Consistency</dt>
+<dd class="field-even"><p>The CAP theorem only distinguishes between <em>strong</em> (single-copy) consistency
+and <em>weak</em> (eventual) consistency. In reality there are many forms of consistency
+appropriate for different applications. These many forms of consistency are not
+properly considered in CAP’s definitions (CAP is overly simplistic). Additionally
+the “Strong” consistency in CAP is sometimes defined as <strong>linearalizability</strong>, and
+other times defined as <strong>one-copy serialiazabiltiy</strong>. By simply stating the CAP theorem
+it is not clear what is meant by “Strong consistency”.</p>
+</dd>
+<dt class="field-odd">Partition Tolerance is defined by the System Model</dt>
+<dd class="field-odd"><p>It is not quite accurate to state that an algorithm provides <em>partition tolerance</em>, since what
+“partition tolerance” means depends on the system model (set of assumptions about the system and network).
+For example an algorithm could be tolerant to short periods of unavailability, but not long periods.</p>
+</dd>
+<dt class="field-even">Theorem 1 only holds where Infinite length partitions are possible</dt>
+<dd class="field-even"><p>Thm 1 states that it is impossible for an asynchronous network
+to provide <em>availaiblility</em> and <em>atomic consistency</em> (for a read/write object).
+However, in the case of a network with <strong>fair-loss links</strong> (there is a non-zero
+probability of a message transmitting successfully) then these properties can be
+trivially satisfied by simply retrying messages until they arrive. Since having fair-loss
+links guarantees delivery in an (unbounded but) finite amount of time, CAP’s definition
+of availability will still be satisfied.</p>
+</dd>
+<dt class="field-odd">System Model assumed by Thm 1 makes eventual consistency impossible</dt>
+<dd class="field-odd"><p>For Thm 1 to hold it must be possible for partitions of infinite
+duration to occur. Thm 1 correctly states that availability and
+strong consistency (linearalizability) cannot both hold under these
+conditions. However, eventual consistency is also impossible under these
+conditions (since it is possible that two nodes will <strong>never again</strong> be able
+to communicate).</p>
+</dd>
+</dl>
+<p>The paper goes on to suggest that an eventual response is too weak a
+requirement for availability, and that availability should be considered in
+terms of latency. They propose a model of <strong>delay-sensitivity</strong> as an alternative.</p>
+<div class="section" id="questions-criticisms">
+<h2>Questions/Criticisms<a class="headerlink" href="#questions-criticisms" title="Permalink to this headline">¶</a></h2>
+<p>I appreciate that the paper provided a viable alternative to the CAP theorem
+while criticising it. However I did feel that some of the criticism given, though
+well justified, misinterpreted the purpose of the CAP theorem.</p>
+<p>For example, the authors criticize CAP for it’s definition of availability not
+requiring an upper bound. Though in real world application an upper bound is strictly
+necessary, It still may be useful to consider algorithms which provide which do not
+have bounded response times. CAP is concerned with what is theoretically possible, not
+necessarily what is realistically possible. It is fair to use an alternative model which
+better reflects the real-world requirements, but it does not invalidate CAP in theory.</p>
+</div>
+<div class="section" id="related-resources">
+<h2>Related Resources<a class="headerlink" href="#related-resources" title="Permalink to this headline">¶</a></h2>
+<p>This article (<a class="reference external" href="https://martin.kleppmann.com/2015/05/11/please-stop-calling-databases-cp-or-ap.html">https://martin.kleppmann.com/2015/05/11/please-stop-calling-databases-cp-or-ap.html</a>) hits on many
+of the same points as the paper, while being a little easier to digest.</p>
+<p>This post (<a class="reference external" href="http://www.shantala.io/cap-theorem/">http://www.shantala.io/cap-theorem/</a>) gives a simple explanation of the consistency/latency trade-off
+discussed in the paper</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="project_critiques.html" class="btn btn-neutral float-left" title="Project Phase 1 Critiques" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Blake Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
