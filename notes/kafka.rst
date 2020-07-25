@@ -64,3 +64,6 @@ I did some researching on Kafka from these sources:
   * https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html
 
 
+I wrote a simple wordcount program which uses Kafka as an example, you can see the repo at https://github.com/BlakeASmith/KafkaExample
+
+
