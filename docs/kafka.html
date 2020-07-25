@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Event Streaming: Lessons from Confluen-Cloud &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
+  <title>Event Streaming: Lessons from Confluent-Cloud &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
   
 
   
@@ -35,7 +35,8 @@
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Cumulative Wordcounts from 1452 pages on UsedVictoria.com" href="wc.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -80,7 +81,7 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="google_article.html">Google Article on Distributed Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="aws_beyondelevennines_talk.html">Noes from AWS Beyond Eleven Nines Talk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="clock_exercise/clock_exercise.html">Clock Exercise</a></li>
@@ -93,6 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="project_critiques.html">Project Phase 1 Critiques</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cap_critiqe.html">Summary of A Critique of the CAP Theorem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="wc.html">Cumulative Wordcounts from 1452 pages on UsedVictoria.com</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Event Streaming: Lessons from Confluent-Cloud</a></li>
 </ul>
 
             
@@ -138,7 +140,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Event Streaming: Lessons from Confluen-Cloud</li>
+      <li>Event Streaming: Lessons from Confluent-Cloud</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -157,56 +159,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <ul class="simple">
-<li><p>ETL/Data Integration vs Messaging</p></li>
-</ul>
-<dl class="simple">
-<dt><strong>event streaming</strong>:</dt><dd><ul class="simple">
-<li><p>Scalable</p></li>
-<li><p>Durable</p></li>
-<li><p>Persistent</p></li>
-<li><p>Ordered</p></li>
-<li><p>low latency</p></li>
-</ul>
-</dd>
-</dl>
-<p>ETL = “what happened in the world”
-Messaging = “What is happening in the world”
-Kafka = “What is contextually happening in the world”</p>
-<ul class="simple">
-<li><p>Stream of events which is continually updating</p></li>
-<li><p>has schemas which are versioned &amp; easily discoverable &amp; envorced</p></li>
-<li><dl class="simple">
-<dt>has KSQL for query language</dt><dd><ul>
-<li><p>the logs in KSQL can be read using KSQL queries as they are an event stream as well</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>needs to be elastic</dt><dd><ul>
-<li><p>workaround limits on cloud infrastructure</p></li>
-<li><p>balance traffic continuously</p></li>
-<li><p>move data out of local storage</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-<dl class="simple">
-<dt>“life is better without cluster sizing”</dt><dd><ul class="simple">
-<li><p>Sizing is a moving target</p></li>
-<li><p>cloud infrastructure costs are confusing</p></li>
-<li><p>understanding costs per service is even harder</p></li>
-<li><p>costs can run up 1M per year by using more/better infrastructure than needed</p></li>
-</ul>
-</dd>
-</dl>
-<p>Confluent Cloud
-- pay for what you use
-- 0 to 100mb/s seamlessly</p>
-<div class="section" id="event-streaming-lessons-from-confluen-cloud">
-<h1>Event Streaming: Lessons from Confluen-Cloud<a class="headerlink" href="#event-streaming-lessons-from-confluen-cloud" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="event-streaming-lessons-from-confluent-cloud">
+<h1>Event Streaming: Lessons from Confluent-Cloud<a class="headerlink" href="#event-streaming-lessons-from-confluent-cloud" title="Permalink to this headline">¶</a></h1>
 <p>See the video here: <a class="reference external" href="https://www.youtube.com/watch?time_continue=2&amp;v=YvVf97xeYkw">https://www.youtube.com/watch?time_continue=2&amp;v=YvVf97xeYkw</a></p>
 <p>In this Keynote Neha Narkhede, the co-founder and CTO at Confluent, goes over the pros of
 <strong>event streaming</strong> via Apache Kafka and more specifically the services offered through <em>Confuent Cloud</em>.
@@ -239,12 +193,18 @@ a larger scale. I also think that a streaming model fits best with the way that 
 It is difficult to appreciate the benefits of Confluent’s services without first understanding Kafka and the difficulties surrounding it</p>
 <p>I did some researching on Kafka from these sources:</p>
 <ul class="simple">
-<li><p>The official documentation <a class="reference external" href="https://kafka.apache.org/documentation/#introduction">https://kafka.apache.org/documentation/#introduction</a></p></li>
-<li><p>This Kafka producer tutorial for <em>Kotlin</em> <a class="reference external" href="https://aseigneurin.github.io/2018/08/01/kafka-tutorial-1-simple-producer-in-kotlin.html">https://aseigneurin.github.io/2018/08/01/kafka-tutorial-1-simple-producer-in-kotlin.html</a></p></li>
-<li><p>This producer-consumer tutorial for <em>Kotlin</em> <a class="reference external" href="https://dzone.com/articles/producer-consumer-with-kafka-and-kotlin">https://dzone.com/articles/producer-consumer-with-kafka-and-kotlin</a></p></li>
-<li><p>This simple (entry-level) guide to Kafka in Python <a class="reference external" href="https://towardsdatascience.com/kafka-python-explained-in-10-lines-of-code-800e3e07dad1">https://towardsdatascience.com/kafka-python-explained-in-10-lines-of-code-800e3e07dad1</a></p></li>
-<li><p>This word-count example in Java using Kafka streams api <a class="reference external" href="https://github.com/confluentinc/kafka-streams-examples/blob/5.5.0-post/src/main/java/io/confluent/examples/streams/WordCountLambdaExample.java">https://github.com/confluentinc/kafka-streams-examples/blob/5.5.0-post/src/main/java/io/confluent/examples/streams/WordCountLambdaExample.java</a></p></li>
-<li><p>This quickstart for running Kafka using Confluent Platform and Docker <a class="reference external" href="https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html">https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html</a></p></li>
+<li><p>The official documentation
+* <a class="reference external" href="https://kafka.apache.org/documentation/#introduction">https://kafka.apache.org/documentation/#introduction</a></p></li>
+<li><p>This Kafka producer tutorial for <em>Kotlin</em>
+* <a class="reference external" href="https://aseigneurin.github.io/2018/08/01/kafka-tutorial-1-simple-producer-in-kotlin.html">https://aseigneurin.github.io/2018/08/01/kafka-tutorial-1-simple-producer-in-kotlin.html</a></p></li>
+<li><p>This producer-consumer tutorial for <em>Kotlin</em>
+* <a class="reference external" href="https://dzone.com/articles/producer-consumer-with-kafka-and-kotlin">https://dzone.com/articles/producer-consumer-with-kafka-and-kotlin</a></p></li>
+<li><p>This simple (entry-level) guide to Kafka in Python
+* <a class="reference external" href="https://towardsdatascience.com/kafka-python-explained-in-10-lines-of-code-800e3e07dad1">https://towardsdatascience.com/kafka-python-explained-in-10-lines-of-code-800e3e07dad1</a></p></li>
+<li><p>This word-count example in Java using Kafka streams api
+* <a class="reference external" href="https://github.com/confluentinc/kafka-streams-examples/blob/5.5.0-post/src/main/java/io/confluent/examples/streams/WordCountLambdaExample.java">https://github.com/confluentinc/kafka-streams-examples/blob/5.5.0-post/src/main/java/io/confluent/examples/streams/WordCountLambdaExample.java</a></p></li>
+<li><p>This quickstart for running Kafka using Confluent Platform and Docker
+* <a class="reference external" href="https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html">https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html</a></p></li>
 </ul>
 </div>
 
@@ -253,6 +213,13 @@ It is difficult to appreciate the benefits of Confluent’s services without fir
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="wc.html" class="btn btn-neutral float-left" title="Cumulative Wordcounts from 1452 pages on UsedVictoria.com" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

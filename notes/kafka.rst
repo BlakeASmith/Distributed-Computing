@@ -45,16 +45,22 @@ It is difficult to appreciate the benefits of Confluent's services without first
 I did some researching on Kafka from these sources:
 
 * The official documentation 
+
   * https://kafka.apache.org/documentation/#introduction
 * This Kafka producer tutorial for *Kotlin* 
+
   * https://aseigneurin.github.io/2018/08/01/kafka-tutorial-1-simple-producer-in-kotlin.html
 * This producer-consumer tutorial for *Kotlin* 
+
   * https://dzone.com/articles/producer-consumer-with-kafka-and-kotlin
 * This simple (entry-level) guide to Kafka in Python 
+
   * https://towardsdatascience.com/kafka-python-explained-in-10-lines-of-code-800e3e07dad1
 * This word-count example in Java using Kafka streams api 
+
   * https://github.com/confluentinc/kafka-streams-examples/blob/5.5.0-post/src/main/java/io/confluent/examples/streams/WordCountLambdaExample.java
 * This quickstart for running Kafka using Confluent Platform and Docker 
+
   * https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html
 
 

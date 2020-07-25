@@ -1,42 +1,7 @@
-
-- ETL/Data Integration vs Messaging
-
-**event streaming**:
-        - Scalable
-        - Durable 
-        - Persistent 
-        - Ordered 
-        - low latency
-
-ETL = "what happened in the world"
-Messaging = "What is happening in the world"
-Kafka = "What is contextually happening in the world"
-
-- Stream of events which is continually updating 
-- has schemas which are versioned & easily discoverable & envorced 
-- has KSQL for query language 
-        - the logs in KSQL can be read using KSQL queries as they are an event stream as well
-
-- needs to be elastic
-        - workaround limits on cloud infrastructure 
-        - balance traffic continuously 
-        - move data out of local storage 
-
-"life is better without cluster sizing"
-        - Sizing is a moving target
-        - cloud infrastructure costs are confusing 
-        - understanding costs per service is even harder
-        - costs can run up 1M per year by using more/better infrastructure than needed
-
-Confluent Cloud 
-- pay for what you use
-- 0 to 100mb/s seamlessly 
-
-Event Streaming: Lessons from Confluen-Cloud
+Event Streaming: Lessons from Confluent-Cloud
 =====================================================
 
 See the video here: https://www.youtube.com/watch?time_continue=2&v=YvVf97xeYkw
-
 
 In this Keynote Neha Narkhede, the co-founder and CTO at Confluent, goes over the pros of   
 **event streaming** via Apache Kafka and more specifically the services offered through *Confuent Cloud*. 
@@ -79,11 +44,17 @@ It is difficult to appreciate the benefits of Confluent's services without first
 
 I did some researching on Kafka from these sources:
 
-* The official documentation https://kafka.apache.org/documentation/#introduction
-* This Kafka producer tutorial for *Kotlin* https://aseigneurin.github.io/2018/08/01/kafka-tutorial-1-simple-producer-in-kotlin.html
-* This producer-consumer tutorial for *Kotlin* https://dzone.com/articles/producer-consumer-with-kafka-and-kotlin
-* This simple (entry-level) guide to Kafka in Python https://towardsdatascience.com/kafka-python-explained-in-10-lines-of-code-800e3e07dad1
-* This word-count example in Java using Kafka streams api https://github.com/confluentinc/kafka-streams-examples/blob/5.5.0-post/src/main/java/io/confluent/examples/streams/WordCountLambdaExample.java
-* This quickstart for running Kafka using Confluent Platform and Docker https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html
+* The official documentation 
+  * https://kafka.apache.org/documentation/#introduction
+* This Kafka producer tutorial for *Kotlin* 
+  * https://aseigneurin.github.io/2018/08/01/kafka-tutorial-1-simple-producer-in-kotlin.html
+* This producer-consumer tutorial for *Kotlin* 
+  * https://dzone.com/articles/producer-consumer-with-kafka-and-kotlin
+* This simple (entry-level) guide to Kafka in Python 
+  * https://towardsdatascience.com/kafka-python-explained-in-10-lines-of-code-800e3e07dad1
+* This word-count example in Java using Kafka streams api 
+  * https://github.com/confluentinc/kafka-streams-examples/blob/5.5.0-post/src/main/java/io/confluent/examples/streams/WordCountLambdaExample.java
+* This quickstart for running Kafka using Confluent Platform and Docker 
+  * https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html
 
 
