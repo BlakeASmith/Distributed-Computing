@@ -22,6 +22,7 @@ Welcome to Blake's Distributed Computing Notes
    ./project_critiques.rst
    ./cap_critiqe.rst
    ./wc.rst
+   ./kafka.rst
 
 
 

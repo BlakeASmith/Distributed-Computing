@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Event Streaming: Lessons from Confluent-Cloud &mdash; Distributied Computing Summer 2020 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Cumulative Wordcounts from 1452 pages on UsedVictoria.com" href="wc.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Distributied Computing Summer 2020
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="google_article.html">Google Article on Distributed Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aws_beyondelevennines_talk.html">Noes from AWS Beyond Eleven Nines Talk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clock_exercise/clock_exercise.html">Clock Exercise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grpc/grpc.html">Diggind in to the gRPC example code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labs/lab2.html">Lab 2: A Simplified Distributed Map Reduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labs/lab3/lab3report.html">CSC Lab 3: Analysis of Map-Reduce Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chubby.html">Summary of The Chubby lock service for loosely-coupled distributed systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dsffap4.html">Summary of Distributed Systems for Fun and Profit Chapter 4</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dsffap5.html">Summary of Chapter 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project_critiques.html">Project Phase 1 Critiques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cap_critiqe.html">Summary of A Critique of the CAP Theorem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wc.html">Cumulative Wordcounts from 1452 pages on UsedVictoria.com</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Event Streaming: Lessons from Confluent-Cloud</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Distributied Computing Summer 2020</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Event Streaming: Lessons from Confluent-Cloud</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/kafka.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="event-streaming-lessons-from-confluent-cloud">
+<h1>Event Streaming: Lessons from Confluent-Cloud<a class="headerlink" href="#event-streaming-lessons-from-confluent-cloud" title="Permalink to this headline">¶</a></h1>
+<p>See the video here: <a class="reference external" href="https://www.youtube.com/watch?time_continue=2&amp;v=YvVf97xeYkw">https://www.youtube.com/watch?time_continue=2&amp;v=YvVf97xeYkw</a></p>
+<p>In this Keynote Neha Narkhede, the co-founder and CTO at Confluent, goes over the pros of
+<strong>event streaming</strong> via Apache Kafka and more specifically the services offered through <em>Confuent Cloud</em>.
+Event streaming (treating data as a continuous stream of events) provides persistent, ordered, and scalable
+storage that an ETL (Extract, Transform, Load) system would while also providing low latency. This bridges the
+gap between traditional databases, which deal with persistence, and messaging services, which deal with communication
+between services.</p>
+<p>In her talk, Narkhede describes ETL as considering “what happened in the world” and messaging services as “what is happenning in the world”.
+In contrast, she describes Kafka as “what is <strong>contextually</strong> happening in the world”. In addition to the benefits of <strong>event streaming</strong> as
+a paradigm for data storage, Narkhede discusses the features and benefits of the services which are offered by Confuent, build on top of Apache Kafka
+and other cloud services.</p>
+<p>Such services include KSQL, the KSQL processing log, Confluent-Cloud, and Confluent-Platform.
+KSQL is a query language built for use with Kafka which provides an SQL-like experience for reading the
+Kafka event stream. ksqlDB includes a processing log which stores any errors and details how each row is
+processed. The interesting thing about the processing log is that it is itself an event stream which can be
+queried using KSQL. This allows access to the logs via a structured schema, easing debugging of KSQL apps.</p>
+<p><strong>Confluent Cloud</strong> is a fully managed event streaming platform which is based on Kafka. It runs on infrastructure provided
+by Google Cloud, AWS, Microsoft Azure, etc. but is managed by Confluent. This means that Confluent has already went through the
+trouble of optimizing Apache Kafka to scale well over the cloud infrastructure provided by Amazon, Google, Microsoft, etc.
+Because of this, Confluent-Cloud offers seamless scaling from 0mb/s to 100mb/s and back without having to deal with any cluster sizing.
+It is also a pay for what you use service, which makes it reasonably priced for small projects. Confluent-Cloud aims to get the
+developer up and running with Kafka within minutes and handle the complexity of cluser-sizing and configuration on their behalf.</p>
+<p><strong>Confluent Platform</strong> is a locally managed version of Confluent-Cloud which allows developers to handle their own deployment
+while still utilizing the features of KSQL and other perks provided by Confluent.</p>
+<p>In my own projects I have found streams (&amp; lazily evaluated sequences) to be an invaluable tool, especially in regards to
+concurrent &amp; asynchronous programming. Through this experience I can see how it would be useful to model data this way at
+a larger scale. I also think that a streaming model fits best with the way that things actually are in distributed systems
+(which are naturally asynchronous).</p>
+<p>Though not particularly a criticism of the talk, I do find myself wanting to know more about what Kafka is and how it works.
+It is difficult to appreciate the benefits of Confluent’s services without first understanding Kafka and the difficulties surrounding it</p>
+<p>I did some researching on Kafka from these sources:</p>
+<ul class="simple">
+<li><p>The official documentation</p>
+<ul>
+<li><p><a class="reference external" href="https://kafka.apache.org/documentation/#introduction">https://kafka.apache.org/documentation/#introduction</a></p></li>
+</ul>
+</li>
+<li><p>This Kafka producer tutorial for <em>Kotlin</em></p>
+<ul>
+<li><p><a class="reference external" href="https://aseigneurin.github.io/2018/08/01/kafka-tutorial-1-simple-producer-in-kotlin.html">https://aseigneurin.github.io/2018/08/01/kafka-tutorial-1-simple-producer-in-kotlin.html</a></p></li>
+</ul>
+</li>
+<li><p>This producer-consumer tutorial for <em>Kotlin</em></p>
+<ul>
+<li><p><a class="reference external" href="https://dzone.com/articles/producer-consumer-with-kafka-and-kotlin">https://dzone.com/articles/producer-consumer-with-kafka-and-kotlin</a></p></li>
+</ul>
+</li>
+<li><p>This simple (entry-level) guide to Kafka in Python</p>
+<ul>
+<li><p><a class="reference external" href="https://towardsdatascience.com/kafka-python-explained-in-10-lines-of-code-800e3e07dad1">https://towardsdatascience.com/kafka-python-explained-in-10-lines-of-code-800e3e07dad1</a></p></li>
+</ul>
+</li>
+<li><p>This word-count example in Java using Kafka streams api</p>
+<ul>
+<li><p><a class="reference external" href="https://github.com/confluentinc/kafka-streams-examples/blob/5.5.0-post/src/main/java/io/confluent/examples/streams/WordCountLambdaExample.java">https://github.com/confluentinc/kafka-streams-examples/blob/5.5.0-post/src/main/java/io/confluent/examples/streams/WordCountLambdaExample.java</a></p></li>
+</ul>
+</li>
+<li><p>This quickstart for running Kafka using Confluent Platform and Docker</p>
+<ul>
+<li><p><a class="reference external" href="https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html">https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html</a></p></li>
+</ul>
+</li>
+</ul>
+<p>I wrote a simple wordcount program which uses Kafka as an example, you can see the repo at <a class="reference external" href="https://github.com/BlakeASmith/KafkaExample">https://github.com/BlakeASmith/KafkaExample</a></p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="wc.html" class="btn btn-neutral float-left" title="Cumulative Wordcounts from 1452 pages on UsedVictoria.com" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Blake Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

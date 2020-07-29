@@ -20,7 +20,7 @@ for f in files:
 
 # -- Project information -----------------------------------------------------
 
-project = 'Distributied Computing Summer 2020'
+project = 'Distributed Computing Summer 2020'
 copyright = '2020, Blake Smith'
 author = 'Blake Smith'
 
