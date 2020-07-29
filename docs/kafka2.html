@@ -1,0 +1,323 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kafka basics &mdash; Distributed Computing Summer 2020 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Distributed Computing Summer 2020
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="google_article.html">Google Article on Distributed Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aws_beyondelevennines_talk.html">Noes from AWS Beyond Eleven Nines Talk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clock_exercise/clock_exercise.html">Clock Exercise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grpc/grpc.html">Diggind in to the gRPC example code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labs/lab2.html">Lab 2: A Simplified Distributed Map Reduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labs/lab3/lab3report.html">CSC Lab 3: Analysis of Map-Reduce Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chubby.html">Summary of The Chubby lock service for loosely-coupled distributed systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dsffap4.html">Summary of Distributed Systems for Fun and Profit Chapter 4</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dsffap5.html">Summary of Chapter 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project_critiques.html">Project Phase 1 Critiques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cap_critiqe.html">Summary of A Critique of the CAP Theorem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wc.html">Cumulative Wordcounts from 1452 pages on UsedVictoria.com</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kafka.html">Event Streaming: Lessons from Confluent-Cloud</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Distributed Computing Summer 2020</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Kafka basics</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/kafka2.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kafka-basics">
+<h1>Kafka basics<a class="headerlink" href="#kafka-basics" title="Permalink to this headline">¶</a></h1>
+<ul>
+<li><p>System for logging events</p></li>
+<li><dl class="simple">
+<dt>NOT A QUEUE, it’s a log</dt><dd><ul class="simple">
+<li><p>it stores things</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Topics</dt><dd><ul class="simple">
+<li><p>events, key-value pairs</p></li>
+<li><p>live in topic until some specified expiry time</p></li>
+<li><p>can be the system of record, but is usually temporary</p></li>
+<li><dl class="simple">
+<dt>log partitioned over multiple machines (brokers)</dt><dd><ul>
+<li><p>consistent hashing</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Ordering</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>ordering is by key</dt><dd><ul>
+<li><p>no global ordering based on time</p></li>
+<li><p>usually doesnt matter though, ordering by key is usually good enough</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Replication</dt><dd><ul class="simple">
+<li><p>usually 3</p></li>
+<li><dl class="simple">
+<dt>elects a leader</dt><dd><ul>
+<li><p>producers talk to leader</p></li>
+<li><p>comsumers also talk to the leader</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>can have multiple consumers on a topic</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>everything is a producer or a consumer, that’s all kafka knows about.
+things like kafka streams are build on top</p></li>
+<li><p>events are immutable</p></li>
+<li><dl class="simple">
+<dt>partitions are not immutable</dt><dd><ul class="simple">
+<li><p>replicating mutable objects is painfull</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Conroller</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>a special broker that is elected as the controller</dt><dd><ul>
+<li><p>monitors other brokers</p></li>
+<li><dl class="simple">
+<dt>when a broker fails the controller medates the elections per parition</dt><dd><ul>
+<li><p>each broker is a folower for some partitions and a leader of others</p></li>
+<li><p>controller will update other brokers about new leaders per topic and partitions</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>followers ask the leader for new writes</dt><dd><ul>
+<li><p>writes are not pushed to followers</p></li>
+<li><p>what determines a successful write is determined by the application</p></li>
+<li><p>can only consume data that has been fully replicated</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>In the keynote the speaker brought voulanteers to act out the operations of a kafka cluster</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>leader can’t expose items until they are replicated</p></li>
+<li><p>dumb brokers are good</p></li>
+</ul>
+</div></blockquote>
+<ul>
+<li><p>consumer groups</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>one consumer is the leader of the group</p></li>
+<li><p>one broker is in charge of that consumer group</p></li>
+<li><p>first member of group is the keader</p></li>
+<li><p>leader sends heartbeats to broker</p></li>
+<li><p>first consumer gets all the partitions</p></li>
+<li><p>leader rebalances when new members join the group</p></li>
+<li><p>the other members will get partition assignments on the next heartbeat</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Blake Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
